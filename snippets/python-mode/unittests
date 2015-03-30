@@ -1,0 +1,14 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: unittests
+# key: unittests
+# binding: direct-keybinding
+# --
+import unittest
+
+class Test(unittest.TestCase):
+    def setUp(self):
+        pass
+
+
+if __name__ == '__main__':
+    unittest.main()

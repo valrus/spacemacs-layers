@@ -1,10 +1,12 @@
 ;;; UI stuff
 ;; Line numbers are real useful for Vim
-(setq linum-format "%4d\u2502 ")
 (global-linum-mode t)
 
 ; Turn off minor mode symbols
 ; (spacemacs/mode-line-minor-modes-toggle)
+
+; Don't allow cursor to leave minibuffer when helm is up, it breaks everything
+(setq-default helm-prevent-escaping-from-minibuffer t)
 
 ;; Load changes from disk automatically
 (global-auto-revert-mode 1)
@@ -14,7 +16,7 @@
 (defun my-gnumakefile-settings ()
   (whitespace-mode 1))
 
-(add-hook 'makefile-gmake-mode-hook 'my-gnumakefile-settings)
+(add-hook 'makefile-gmake-mode-hook 'my-gnumakefile-settings t)
 
 ;; org-mode
 (defun my-org-settings ()
@@ -43,6 +45,7 @@
             nil 'local))
 
 (defun my-python-config ()
-  (flycheck-python-setup))
+  (flycheck-python-setup)
+  (smartparens-mode 0))
 
 (add-hook 'python-mode-hook 'my-python-config)

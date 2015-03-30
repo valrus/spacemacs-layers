@@ -14,6 +14,8 @@ which require an initialization must be listed explicitly in the list.")
   "List of packages to exclude.")
 
 (defun frames/init-autofit-frame ()
+  (setq fit-frame-min-width 120)
+  (setq fit-frame-min-height 40)
   (add-hook 'after-make-frame-functions 'fit-frame)
   (add-hook 'temp-buffer-show-hook 'fit-frame-if-one-window 'append))
 ;;
