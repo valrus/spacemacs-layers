@@ -2,14 +2,24 @@
 ;; Line numbers are real useful for Vim
 (global-linum-mode t)
 
-; Turn off minor mode symbols
-; (spacemacs/mode-line-minor-modes-toggle)
-
 ; Don't allow cursor to leave minibuffer when helm is up, it breaks everything
 (setq-default helm-prevent-escaping-from-minibuffer t)
 
 ;; Load changes from disk automatically
 (global-auto-revert-mode 1)
+
+;; Center after searching
+(defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)
+  (evil-scroll-line-to-center (line-number-at-pos)))
+
+(defadvice evil-ex-search-previous (after advice-for-evil-ex-search-previous activate)
+  (evil-scroll-line-to-center (line-number-at-pos)))
+
+(defadvice evil-jumper/forward (after advice-for-evil-jumper/forward activate)
+  (evil-scroll-line-to-center (line-number-at-pos)))
+
+(defadvice evil-jumper/backward (after advice-for-evil-jumper/backward activate)
+  (evil-scroll-line-to-center (line-number-at-pos)))
 
 ;;; Mode-specific settings
 ;; GNU makefile
