@@ -34,3 +34,10 @@
 (add-to-list 'display-buffer-alist
              '("\*MAGIT.*\*" .
                ((display-buffer-pop-up-frame) . ())))
+
+; Close the log-edit frame after finishing with it
+(defun my-log-edit-finish ()
+  (delete-frame (window-frame (get-buffer-window log-edit-files-buf)))
+  (delete-frame (window-frame (get-buffer-window "*vc-log*"))))
+
+(add-hook 'vc-checkin-hook 'my-log-edit-finish)
