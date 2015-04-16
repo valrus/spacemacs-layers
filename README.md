@@ -1,10 +1,3 @@
-# Spacemacs config layers for valrus
-
-This is a repo for my private config layers.
-Currently it's undocumented because I'm just using GitHub for backup and versioning.
-What follows is the official Spacemacs docs for the `private` folder
-where this repo should be cloned.
-
 # Private repository
 
 The content of this directory is ignored by Git. This is the default place
@@ -12,7 +5,7 @@ where to store your private configuration layers.
 
 To create a new configuration layer:
 
-    `<SPC> : configuration-layer/create-layer RET`
+    <SPC> : configuration-layer/create-layer RET
 
 Then enter the name of your configuration in the prompt.
 
