@@ -20,7 +20,7 @@ which require an initialization must be listed explicitly in the list.")
 (defvar persp-mode-excluded-packages '()
   "List of packages to exclude.")
 
-(defun valrus/init-persp-mode ()
+(defun persp-mode/init-persp-mode ()
   (setq wg-morph-on nil)
   (add-hook 'after-init-hook #'(lambda ()
                                  (setq persp-auto-save-opt 2)
