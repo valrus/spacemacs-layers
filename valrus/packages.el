@@ -3,10 +3,12 @@
     ; Languages I don't use
     coffee-mode
     csharp-mode
+    ; (scala)
     ensime
     less-css-mode
     powershell
     powershell-mode
+    ; (also scala)
     sbt-mode
     scala-mode2
     scss-mode
@@ -27,6 +29,7 @@
 
 (defvar valrus-packages
   '(
+    elm-mode
     fill-column-indicator
     )
   "List of all packages to install and/or initialized. Built-in packages
@@ -35,4 +38,6 @@ which require an initialization must be listed explicitly in the list.")
 (defun valrus/init-fill-column-indicator ()
   (turn-on-fci-mode))
 
+(defun valrus/init-elm-mode ()
+  (setq exec-path (append exec-path '("c:/Program Files (x86)/Elm Platform/0.14.1/bin)"))))
 

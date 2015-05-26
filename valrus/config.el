@@ -59,3 +59,10 @@
   (smartparens-mode 0))
 
 (add-hook 'python-mode-hook 'my-python-config)
+
+;; C
+
+(defun my-c-settings ()
+  (setq c-basic-offset 4))
+
+(add-hook 'c-mode-common-hook 'my-c-settings)
