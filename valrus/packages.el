@@ -31,6 +31,7 @@
   '(
     elm-mode
     fill-column-indicator
+    yasnippet
     )
   "List of all packages to install and/or initialized. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -41,3 +42,5 @@ which require an initialization must be listed explicitly in the list.")
 (defun valrus/init-elm-mode ()
   (setq exec-path (append exec-path '("c:/Program Files (x86)/Elm Platform/0.14.1/bin)"))))
 
+(defun valrus/init-yasnippet ()
+  (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))

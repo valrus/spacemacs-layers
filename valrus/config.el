@@ -61,7 +61,6 @@
 (add-hook 'python-mode-hook 'my-python-config)
 
 ;; C
-
 (defun my-c-settings ()
   (setq c-basic-offset 4))
 
