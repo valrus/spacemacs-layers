@@ -9,7 +9,6 @@ which require an initialization must be listed explicitly in the list.")
 
 (defvar frames-excluded-packages
   '(
-    popwin
     )
   "List of packages to exclude.")
 
