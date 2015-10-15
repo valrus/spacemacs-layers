@@ -1,0 +1,53 @@
+#+TITLE: Persp-mode contribution layer for Spacemacs
+
+* Table of Contents :TOC@4:
+ - [[#description][Description]]
+   - [[#features][Features]]
+   - [[#compared-to-perspectives-layer][Compared to Perspectives layer]]
+ - [[#install][Install]]
+ - [[#key-bindings][Key Bindings]]
+
+* Description
+This contrib layer sets up [[https://github.com/Bad-ptr/persp-mode.el][persp-mode]].
+** Features
+persp-mode saves window layouts and lets you switch between them.
+** Compared to Perspectives layer
+How is the persp-mode layer different from the [[https://github.com/syl20bnr/spacemacs/tree/master/layers/%2Bwindow-management/perspectives][Perspectives layer]]?
+- No out-of-the-box integration with other layers and features: persp-mode is
+  (currently) a totally standalone package. The [[https://github.com/Bad-ptr/persp-mode.el][persp-mode documentation]] has
+  some ways to integrate it with other packages but none are implemented here yet.
+- No need to use a macro to save perspectives: You can save perspectives to a file
+  using the =persp-save-state-to-file= command and load them using
+  =persp-load-state-from-file=. These are bound to =<SPC> L w= and =<SPC> L l=
+  by default.
+- Perspectives are shared among frames: This makes it possible to (like I do) have
+  many frames open at a time, each with a different perspective open for a given
+  project.
+- The current perspective's name is shown in the [[https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#minor-modes][minor mode indicators section]] of the
+  Spacemacs modeline. I didn't do anything to enable this! It just worked!
+
+
+* Install
+To use this contribution layer add it to your =~/.spacemacs=
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default dotspacemacs-configuration-layers '(persp-mode))
+#+END_SRC
+
+* Key Bindings
+The prefix command for perspective commands is ~SPC L~ (for Layout). This overlaps
+with the prefix for the Perspectives layer, but this is by design, because I doubt the
+two layers are compatible with each other.
+
+| Key Binding | Description                                                                            |
+|-------------+----------------------------------------------------------------------------------------|
+| ~SPC L a~   | Choose and add a buffer to the current perspective                                     |
+| ~SPC L c~   | Close a perspective                                                          |
+| ~SPC L k~   | Choose and remove a buffer from the current perspective                                |
+| ~SPC L n~   | Next perspective                                                                       |
+| ~SPC L p~   | Previous perspective                                                                   |
+| ~SPC L r~   | Rename current perspective                                                             |
+| ~SPC L s~   | Switch to a perspective                                                                |
+| ~SPC L t~   | ("temporary") Choose and display a buffer without adding it to the current perspective |
+| ~SPC L w~   | Write perspectives to a file                                                           |
+| ~SPC L l~   | Load perspectives from  a file                                                         |
