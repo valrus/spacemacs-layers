@@ -1,4 +1,4 @@
-;;; packages.el --- elm Layer packages File for Spacemacs
+;;; packages.el --- jinja2 Layer packages File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2014 Sylvain Benner
 ;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
@@ -12,17 +12,17 @@
 
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
-(setq elm-packages
+(setq jinja2-packages
     '(
-      ;; package names go here
+      jinja2-mode
       ))
 
 ;; List of packages to exclude.
-(setq elm-excluded-packages '())
+(setq jinja2-excluded-packages '())
 
-;; For each package, define a function elm/init-<package-name>
+;; For each package, define a function jinja2/init-<package-name>
 ;;
-;; (defun elm/init-my-package ()
+;; (defun jinja2/init-my-package ()
 ;;   "Initialize my package"
 ;;   )
 ;;

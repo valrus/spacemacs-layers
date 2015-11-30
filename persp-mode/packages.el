@@ -39,7 +39,6 @@ which require an initialization must be listed explicitly in the list.")
       (setq persp-auto-save-opt 2)
       (setq persp-auto-save-num-of-backups 1)
       (setq persp-save-dir (concat (getenv "HOME") "/.emacs.d/private/persp-confs/"))
-      (setq persp-auto-save-fname "work")
       (setq persp-auto-resume-time 0)
       (setq persp-set-last-persp-for-new-frames nil)
       (add-hook 'kill-emacs-hook 'persp-save-state-to-file)
@@ -59,5 +58,5 @@ which require an initialization must be listed explicitly in the list.")
     :config
     (progn
       (persp-mode 1)
-      (persp-load-state-from-file "work"))))
+      (persp-load-state-from-file persp-auto-save-fname))))
 

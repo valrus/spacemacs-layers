@@ -1,4 +1,4 @@
-;;; extensions.el --- elm Layer extensions File for Spacemacs
+;;; extensions.el --- jinja2 Layer extensions File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2014 Sylvain Benner
 ;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
@@ -10,19 +10,19 @@
 ;;
 ;;; License: GPLv3
 
-(setq elm-pre-extensions
+(setq jinja2-pre-extensions
       '(
         ;; pre extension names go here
         ))
 
-(setq elm-post-extensions
+(setq jinja2-post-extensions
       '(
         ;; post extension names go here
         ))
 
-;; For each extension, define a function elm/init-<extension-name>
+;; For each extension, define a function jinja2/init-<extension-name>
 ;;
-;; (defun elm/init-my-extension ()
+;; (defun jinja2/init-my-extension ()
 ;;   "Initialize my extension"
 ;;   )
 ;;
