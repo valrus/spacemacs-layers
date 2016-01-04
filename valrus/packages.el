@@ -80,4 +80,4 @@ which require an initialization must be listed explicitly in the list.")
   (set-face-attribute 'rainbow-delimiters-mismatched-face nil
                       :overline nil))
 
-(with-eval-after-load 'rainbow-delimiters 'valrus/rainbow-delimiters-fonts)
+(advice-add 'load-theme :after 'valrus/rainbow-delimiters-fonts)
