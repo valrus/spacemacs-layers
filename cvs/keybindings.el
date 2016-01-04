@@ -1,8 +1,8 @@
-(evil-leader/set-key
+(spacemacs/set-leader-keys
   "Vc" 'vc-next-action
   "Vu" 'vc-update)
 
-(evil-leader/set-key-for-mode 'log-edit-mode
+(spacemacs/set-leader-keys-for-major-mode 'log-edit-mode
   "cc" 'log-edit-done)
 
 (defun cvs/set-log-edit-keys ()
