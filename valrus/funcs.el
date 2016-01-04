@@ -8,7 +8,8 @@
   "Open this config layer's main config in a new frame."
   (interactive)
   (find-file-other-frame (concat (getenv "HOME")
-                                 "/.emacs.d/private/valrus/config.el")))
+                                 "/.emacs.d/private/valrus/config.el"))
+  (persp-switch 'conf))
 
 (defun my-open-init ()
   "Open the main spacemacs config in a new frame."
