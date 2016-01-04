@@ -1,6 +1,6 @@
 ;;; Commands with the leader (<SPC> for Spacemacs)
 ;; Quick-open useful files with <SPC> o
-(evil-leader/set-key
+(spacemacs/set-leader-keys
   "ot" 'my-open-todos
   "oc" 'my-open-config
   "oi" 'my-open-init)
