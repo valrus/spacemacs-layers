@@ -9,8 +9,6 @@
 (define-key evil-normal-state-map "U" 'undo-tree-redo)
 
 ;;; Mode-specific bindings
-;; Spacemacs-ify eval-last-sexp
-(evil-leader/set-key-for-mode 'emacs-lisp-mode "xe" 'eval-last-sexp)
 
 ;;; http://metasandwich.com/2013/01/19/having-my-vim-and-m-x-emacs-ing-it-too/
 ;; lw for "little words" that stop at underscores or capital letters
