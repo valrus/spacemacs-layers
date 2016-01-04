@@ -37,12 +37,3 @@
 
 (define-key evil-normal-state-map "R" 'evil-destroy-replace)
 
-;; Don't put all-whitespace regions into the clipboard
-;; This causes a max recursion error :(
-;; (defun whitespace-only-p (string)
-;;   (equal "" (replace-regexp-in-string "[ \t\n]" "" string)))
-
-;; (defadvice evil-delete (around evil-delete-yank activate)
-;;   (if (whitespace-only-p (buffer-substring beg end))
-;;       (evil-destroy beg end type register yank-handler)
-;;     ad-do-it))
