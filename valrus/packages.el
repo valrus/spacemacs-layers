@@ -30,7 +30,9 @@
 (defvar valrus-packages
   '(
     fill-column-indicator
+    flycheck
     org
+    persp-mode
     rainbow-delimiters
     yasnippet
     )
@@ -66,12 +68,24 @@ which require an initialization must be listed explicitly in the list.")
                       :weight 'normal)
   )
 
+(defun valrus/post-init-persp-mode ()
+  (spacemacs|define-custom-layout "conf"
+    :binding "c"
+    :body
+    (find-file (concat (getenv "HOME") "/.spacemacs"))
+    (split-window-right)
+    (find-file (concat (getenv "HOME") "/.emacs.d/private/valrus/config.el"))
+    ))
+
 (defun valrus/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config
     (progn
     (setq org-bullets-bullet-list '("■" "◆" "▲" "▶")))
     (my-org-fonts)))
+
+(defun valrus/post-init-flycheck ()
+  (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
 
 (defun valrus/rainbow-delimiters-fonts ()
   ;; Turn off overlines; they mess up line spacing
