@@ -1,7 +1,4 @@
 ;;; UI stuff
-;; Line numbers are real useful for Vim
-(global-linum-mode t)
-
 ; Don't allow cursor to leave minibuffer when helm is up, it breaks everything
 (setq-default helm-prevent-escaping-from-minibuffer t)
 
