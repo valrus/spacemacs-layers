@@ -30,7 +30,6 @@
   '(
     fill-column-indicator
     flycheck
-    org
     persp-mode
     rainbow-delimiters
     yasnippet
@@ -43,29 +42,6 @@ which require an initialization must be listed explicitly in the list.")
 
 (defun valrus/post-init-yasnippet ()
   (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))
-
-(defun my-org-fonts ()
-  "Better fonts for Org mode."
-  (set-face-attribute 'org-level-1 nil
-                      :weight 'normal
-                      :height 1.0
-                      :inherit 'header-line)
-  (set-face-attribute 'org-level-2 nil
-                      :weight 'normal
-                      :height 1.0
-                      :inherit 'header-line)
-  (set-face-attribute 'org-level-3 nil
-                      :weight 'normal
-                      :height 1.0
-                      :inherit 'header-line)
-  (set-face-attribute 'org-tag nil
-                      :weight 'normal)
-  (set-face-attribute 'org-document-title nil
-                      :font "Pic0"
-                      :inherit 'header-line
-                      :height 120
-                      :weight 'normal)
-  )
 
 (defun valrus/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@conf"

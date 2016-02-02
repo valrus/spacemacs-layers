@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: footnote
+# key: footnote
+# binding: direct-keybinding
+# --
+
+<li class="foot" id="foot$0"></li>
