@@ -5,12 +5,14 @@
 
 ; (rassq-delete-all 'pop-up-frame display-buffer-alist)
 (setq pop-up-frame-alist
-      '((top . (+ 0))))
+      '((top . (+ 0))
+        (width . 100)
+        (height . 50)))
 
 (setq-default pop-up-frames "graphic-only")
 (setq frame-auto-hide-function 'my-popup-frame-cleanup)
 
-; Make magit open in a frame
+; Windows to open in frames
 
 (add-to-list 'display-buffer-alist
              '(".*COMMIT_EDITMSG" .
@@ -18,6 +20,10 @@
 
 (add-to-list 'display-buffer-alist
              '("\*MAGIT.*\*" .
+               ((display-buffer-pop-up-frame) . ())))
+
+(add-to-list 'display-buffer-alist
+             '("\*compilation.*\*" .
                ((display-buffer-pop-up-frame) . ())))
 
 ; Close the log-edit frame after finishing with it

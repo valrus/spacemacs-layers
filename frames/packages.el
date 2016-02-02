@@ -7,11 +7,6 @@
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
 
-(defvar frames-excluded-packages
-  '(
-    )
-  "List of packages to exclude.")
-
 (defun frames/init-autofit-frame ()
   (setq fit-frame-min-width 120)
   (setq fit-frame-min-height 40)

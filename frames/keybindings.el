@@ -1,3 +1,3 @@
 (spacemacs/set-leader-keys
-  "of" 'make-frame
+  "of" 'my-new-frame
   "oF" 'my-new-maximized-frame)
