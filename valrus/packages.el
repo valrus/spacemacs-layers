@@ -3,13 +3,11 @@
     ; Languages I don't use
     coffee-mode
     csharp-mode
-    ; (scala)
-    ensime
+    ensime  ; (scala)
     less-css-mode
     powershell
     powershell-mode
-    ; (also scala)
-    sbt-mode
+    sbt-mode  ; (also scala)
     scala-mode2
     scss-mode
 
@@ -17,6 +15,7 @@
     ac-ispell
     flyspell
     ispell
+    smartparens
 
     ; UI things I hate
     vi-tilde-fringe
@@ -25,7 +24,7 @@
     monokai-theme
     zenburn-theme
     )
-  "List of packages to exclude. ")
+  "List of packages to exclude.")
 
 (defvar valrus-packages
   '(
@@ -45,7 +44,7 @@ which require an initialization must be listed explicitly in the list.")
   (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))
 
 (defun valrus/post-init-persp-mode ()
-  (spacemacs|define-custom-layout "conf"
+  (spacemacs|define-custom-layout "@conf"
     :binding "c"
     :body
     (find-file (concat (getenv "HOME") "/.spacemacs"))
