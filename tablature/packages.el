@@ -60,38 +60,70 @@ Each entry is either:
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
+
 (defun tablature/init-tablature-mode ()
   (use-package tablature-mode
     :config
     (progn
+      ; don't wait for tab-mode activation to create the mode-map
       (tab-make-mode-map)
-      (evilified-state-evilify-map tab-mode-map
-        :mode tab-mode
-        :bindings
-        ;; add hjkl navigation
-        ; won't work with tab-mode because "h" is the 6th string
-        ; Movement keys on uppercase instead
-        "h" 'tab-e2
-        "H" 'tab-backward-char
-        "L" 'tab-forward-char
-        "J" 'tab-down-staff
-        "K" 'tab-up-staff
-        ;; add scrolling feature on C-f, C-b, C-d and C-u
-        ;; G and gg to go to the end and beginning of the buffer
-        ;; add incremental search with /, n and N
-        ; all of these already have meanings in tab-mode
-        ; and also incremental searching has dubious usefulness in tablature
-        "n"	'tab-e3
-        "N"	'tab-e4
-        "/" 'tab-slide-up
-        ;; enabling evil-ex on :
-        ;; add visual state and visual line state on v and V
-        ; also used by tab-mode, and visual mode has dubious usefulness in tab
-        "v"	'tab-G3
-        "V"	'tab-G4
-        ;; add yank on y in visual state only
-        ;; activate evil-leader key on SPC
-        ))))
+
+      ; import tablature-mode maps suitable for normal mode
+      (cl-loop for (key . action) in tab-normal-mode-map-alist
+            do (evil-define-key 'normal tab-mode-map key action))
+
+      (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
+      (evil-define-key 'normal tab-mode-map "j" 'tab-down-staff)
+      (evil-define-key 'normal tab-mode-map "k" 'tab-up-staff)
+
+      (evil-define-key 'normal tab-mode-map "H" 'evil-backward-char)
+      (evil-define-key 'normal tab-mode-map "L" 'evil-forward-char)
+      (evil-define-key 'normal tab-mode-map "J" 'evil-next-line)
+      (evil-define-key 'normal tab-mode-map "K" 'evil-previous-line)
+
+      ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
+      )))
+
+
+(defun tablature/setup-normal-mode-line ()
+  (setq mode-line-format (list ""
+  			     'mode-line-modified
+  			     'mode-line-buffer-identification
+  			     "   "
+  			     'global-mode-string
+  			     "   %[("
+  			     'mode-name
+  			     'minor-mode-alist
+  			     "--"
+  			     'tab-position-as-string
+  			     'tab-pending-embellishment
+  			     "%n"
+  			     'mode-line-process
+  			     ")%]----"
+  			     '(line-number-mode "L%l--")
+  			     '(-3 . "%p")
+  			     "-%-")))
+
+
+(defun tablature/setup-spaceline ()
+  ; not very useful for tablature mode
+  (spaceline-toggle-line-column-off))
+
+
+(defun tablature/tab-mode-line ()
+  (if (configuration-layer/layer-usedp 'spaceline)
+      (tablature/setup-spaceline)
+    (tablature/setup-normal-mode-line)))
+
+
+(defun tablature/tab-mode-settings ()
+  (tablature/tab-mode-line)
+  (setq evil-insert-state-cursor '("chartreuse3" box)))
+
+
+(defun tablature/post-init-tablature-mode ()
+  (add-hook 'tab-mode-hook 'tablature/tab-mode-settings))
 
 
 ;;; packages.el ends here

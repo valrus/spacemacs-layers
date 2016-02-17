@@ -10,10 +10,28 @@
  - [[Description][Description]]
  - [[Install][Install]]
  - [[Key bindings][Key bindings]]
+   - [[Insert mode only][Insert mode only]]
+   - [[Normal mode only][Normal mode only]]
+   - [[Insert and normal modes][Insert and normal modes]]
+   - [[Insert mode only][Insert mode only]]
 
 * Description
-This layer does wonderful things:
-  - thing01
+Major mode for entering tablature.  Always use minor modes ~lead-mode~
+or ~chord-mode~ instead.
+
+In ~tab-mode~, single keys represent notes on the guitar fretboard, and
+pressing them creates tablature.  This only happens if the cursor is
+in a tablature staff; otherwise the keys have their normal, text, meaning.
+
+In chord-mode, the cursor remains in place (for entry of multiple-note
+chords) until manually moved forward with SPACE or ~forward-char~.  In
+lead-mode, the cursor automatically advances after each note.
+
+For more information on a key or action, do:
+	~describe-key~ and then enter the key(s) for the action
+or
+	~describe-function~ and then enter the name of the action
+
 
 * Install
 To use this contribution add it to your =~/.spacemacs=
@@ -23,7 +41,157 @@ To use this contribution add it to your =~/.spacemacs=
 #+end_src
 
 * Key bindings
+** Insert mode only
 
-| Key Binding     | Description    |
-|-----------------+----------------|
-| ~<SPC> x x x~   | Does thing01   |
+#+begin_src
+                   strings
+
+             E   A    D   G   B   e
+
+                1   2   3   4   5   6         N
+                 q   w   e   r   t   y        N+1    frets
+                  a   s   d   f   g   h       N+2
+                   z   x   c   v   b   n      N+3
+#+end_src
+
+** Normal mode only
+
+=hjkl= do tablature-based movement whenever point is in a tablature staff;
+use =HJKL= for "normal" character- and line-based movement instead.
+
+| Key | =tab-mode= function  | Description                 |
+|-----+----------------------+-----------------------------|
+| =h= | ~tab-backward-char~  | Go back one tab position    |
+| =j= | ~tab-down-staff~     | Go to the next staff        |
+| =k= | ~tab-up-staff~       | Go to the previous staff    |
+| =l= | ~tab-forward-char~   | Go forward one tab position |
+
+** Insert and normal modes
+| Key     | =tab-mode= function      | Description                                    |
+|---------+--------------------------+------------------------------------------------+
+| ={=     | ~chord-mode~             | Enter chord mode                               |
+| =}=     | ~lead-mode~              | Enter lead mode                                |
+| =<=     | ~tab-decrement-position~ | Decrement base fret position by 1              |
+| =>=     | ~tab-increment-position~ | Increment base fret position by 1              |
+| =?=     | ~tab-set-position~       | Prompt for numeric entry of base fret position |
+| =\==    | ~tab-make-staff~         | Make a new tablature staff                     |
+| =\vert= | ~tab-barline~            | Change current tab position to a bar line      |
+
+** Insert mode only
+| Navigation | =tab-mode= function         | Description                                              |
+|------------+-----------------------------+----------------------------------------------------------|
+| =<SPACE>=  | ~tab-forward~               | Move one tab position forward                            |
+| =C-h=      | ~tab-delete-note~           | delete previous (lead-mode) or current (chord-mode) note |
+| =C-?=      | ~tab-delete-chord-backward~ | delete previous note/chord                               |
+|            | ~tab-delete-chord-forward~  | delete current note/chord                                |
+| =C-i=      | ~tab-insert~                | insert blank space                                       |
+| =[=        | ~tab-hammer~                | mark current note as hammer-on                           |
+| =]=        | ~tab-pull~                  | mark current note as pull-off                            |
+| =;=        | ~tab-bend~                  | mark current note as bend                                |
+| ='=        | ~tab-release~               | mark current note as release                             |
+| =/=        | ~tab-slide-up~              | mark current note as slide-up                            |
+| =\=        | ~tab-slide-down~            | mark current note as slide-down                          |
+| =~=        | ~tab-vibrato~               | mark current note as vibrato                             |
+| =(=        | ~tab-ghost~                 | mark current note as ghost note                          |
+| =.=        | ~tab-muffled~               | mark current note as muffled note                   |
+| =-=        | ~tab-normal~                | mark current note as normal note                         |
+
+	+	transpose notes in region by N frets (tab-transpose)
+
+	\\[xfretboard]	start xfretboard (optional graphical interface)
+
+	\\[tab-copy-region-as-kill]	memorize tab between dot and mark (incl).
+	\\[tab-kill-region]	as above, but also delete
+	\\[tab-yank]	insert previously killed tablature
+
+	\\[tab-copy-retune]	copy tab staff, transposing to current tuning
+	\\[tab-learn-tuning]	memorize new tuning (cursor first string)
+	\\[tab-analyze-chord]	analyze chord (cursor on root note)
+	\\[tab-label-chord]	insert previously analyzed chord name
+	\\[tab-note-name]	change whether chords are A# vs. Bb, etc.
+
+	\\[tab-higher-string]	move note to next higher string
+	\\[tab-lower-string]	move note to next higher string
+
+	\\[tab-up-12]	move note up   12 frets
+	\\[tab-down-12]	move note down 12 frets
+
+Tablature mode recognizes when the cursor is on a tab staff (and draws
+new tab staffs) with six, three-character long, strings.  Each of the six
+must be unique.  To change these strings (e.g. for alternate tunings),
+enter them (while *not* in tab-mode) at the beginnings of six consecutive
+lines, and use `\\[execute-extended-command] tab-learn-tuning'.
+
+
+Full list of commands:
+\\{tab-mode-map}
+
+
+
+	{	enter chord mode
+	}	enter lead mode
+
+	=	make a new tablature staff
+
+	<	decrement base fret position by one (is printed on mode line)
+	>	increment base fret position by one (is printed on mode line)
+	?	prompt for numeric entry of base fret position
+
+	SPACE 	move one tab position forward 
+	\\[tab-forward-char]	move one tab position forward 
+	\\[tab-backward-char]	move one tab position backward 
+	\\[tab-forward-barline]	move forward one bar line
+	\\[tab-backward-barline]	move back one bar line
+	\\[tab-up-staff]	move up one staff
+	\\[tab-down-staff]	move down one staff
+
+
+	C-h	delete previous (lead-mode) or current (chord-mode) note
+	C-?	delete previous note/chord
+	\\[tab-delete-chord-forward]	delete current note/chord
+
+	C-i	insert blank space
+
+	|	enter bar line
+
+	[	mark current note as hammer-on
+	]	mark current note as pull-off
+	;	mark current note as bend
+	'	mark current note as release
+	/	mark current note as slide-up
+	\	mark current note as slide-down
+	~	mark current note as vibrato
+	(	mark current note as ghost note
+	-	mark current note as normal note
+
+	+	transpose notes in region by N frets (tab-transpose)
+
+	\\[xfretboard]	start xfretboard (optional graphical interface)
+
+	\\[tab-copy-region-as-kill]	memorize tab between dot and mark (incl).
+	\\[tab-kill-region]	as above, but also delete
+	\\[tab-yank]	insert previously killed tablature
+
+	\\[tab-copy-retune]	copy tab staff, transposing to current tuning
+	\\[tab-learn-tuning]	memorize new tuning (cursor first string)
+	\\[tab-analyze-chord]	analyze chord (cursor on root note)
+	\\[tab-label-chord]	insert previously analyzed chord name
+	\\[tab-note-name]	change whether chords are A# vs. Bb, etc.
+
+	\\[tab-higher-string]	move note to next higher string
+	\\[tab-lower-string]	move note to next higher string
+
+	\\[tab-up-12]	move note up   12 frets
+	\\[tab-down-12]	move note down 12 frets
+
+Tablature mode recognizes when the cursor is on a tab staff (and draws
+new tab staffs) with six, three-character long, strings.  Each of the six
+must be unique.  To change these strings (e.g. for alternate tunings),
+enter them (while *not* in tab-mode) at the beginnings of six consecutive
+lines, and use `\\[execute-extended-command] tab-learn-tuning'.
+
+
+Full list of commands:
+\\{tab-mode-map}
+
+
