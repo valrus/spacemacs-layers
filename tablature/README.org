@@ -93,7 +93,7 @@ use =HJKL= for "normal" character- and line-based movement instead.
 | =\=        | ~tab-slide-down~            | mark current note as slide-down                          |
 | =~=        | ~tab-vibrato~               | mark current note as vibrato                             |
 | =(=        | ~tab-ghost~                 | mark current note as ghost note                          |
-| =.=        | ~tab-muffled~               | mark current note as muffled note                   |
+| =.=        | ~tab-muffled~               | mark current note as muffled note                        |
 | =-=        | ~tab-normal~                | mark current note as normal note                         |
 
 	+	transpose notes in region by N frets (tab-transpose)

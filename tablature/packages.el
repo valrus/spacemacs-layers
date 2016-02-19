@@ -32,6 +32,7 @@
 (defconst tablature-packages
   '(
     (tablature-mode :location local)
+    spaceline
     )
   "The list of Lisp packages required by the tablature layer.
 
@@ -61,6 +62,13 @@ Each entry is either:
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
 
+(defun tablature/post-init-spaceline ()
+  (spaceline-define-segment base-fret-segment
+    (format "Fret: %s" tab-position-as-string)
+    :when (equal major-mode 'tab-mode))
+  (add-to-list 'spaceline-right 'base-fret-segment))
+
+
 (defun tablature/init-tablature-mode ()
   (use-package tablature-mode
     :config
@@ -83,6 +91,7 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "K" 'evil-previous-line)
 
       ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
+      ;; TODO: C-?	delete previous note/chord
       )))
 
 
@@ -112,13 +121,13 @@ Each entry is either:
 
 
 (defun tablature/tab-mode-line ()
-  (if (configuration-layer/layer-usedp 'spaceline)
-      (tablature/setup-spaceline)
+  (if (not (configuration-layer/layer-usedp 'spaceline))
     (tablature/setup-normal-mode-line)))
 
 
 (defun tablature/tab-mode-settings ()
   (tablature/tab-mode-line)
+  (chord-mode)
   (setq evil-insert-state-cursor '("chartreuse3" box)))
 
 
