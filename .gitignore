@@ -1,5 +1,5 @@
 persp-confs
-local
+/local
 todo.org
 *.stackdump
 .#*
