@@ -80,6 +80,11 @@ Each entry is either:
       (cl-loop for (key . action) in tab-normal-mode-map-alist
             do (evil-define-key 'normal tab-mode-map key action))
 
+      (evil-define-key 'insert tab-mode-map (kbd "<left>") 'tab-backward-char)
+      (evil-define-key 'insert tab-mode-map (kbd "<right>") 'tab-forward-char)
+      (evil-define-key 'insert tab-mode-map (kbd "<down>") 'tab-down-staff)
+      (evil-define-key 'insert tab-mode-map (kbd "<up>") 'tab-up-staff)
+
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
       (evil-define-key 'normal tab-mode-map "j" 'tab-down-staff)
@@ -121,14 +126,14 @@ Each entry is either:
 
 
 (defun tablature/tab-mode-line ()
-  (if (not (configuration-layer/layer-usedp 'spaceline))
+  (if (not (configuration-layer/package-usedp 'spaceline))
     (tablature/setup-normal-mode-line)))
 
 
 (defun tablature/tab-mode-settings ()
   (tablature/tab-mode-line)
-  (chord-mode)
-  (setq evil-insert-state-cursor '("chartreuse3" box)))
+  (setq-local evil-insert-state-cursor '("chartreuse3" box))
+  (setq-local evil-move-cursor-back nil))
 
 
 (defun tablature/post-init-tablature-mode ()
