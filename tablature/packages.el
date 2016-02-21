@@ -80,20 +80,32 @@ Each entry is either:
       (cl-loop for (key . action) in tab-normal-mode-map-alist
             do (evil-define-key 'normal tab-mode-map key action))
 
+      ; Insert mode bindings
       (evil-define-key 'insert tab-mode-map (kbd "<left>") 'tab-backward-char)
       (evil-define-key 'insert tab-mode-map (kbd "<right>") 'tab-forward-char)
-      (evil-define-key 'insert tab-mode-map (kbd "<down>") 'tab-down-staff)
-      (evil-define-key 'insert tab-mode-map (kbd "<up>") 'tab-up-staff)
+      (evil-define-key 'insert tab-mode-map (kbd "<down>") 'evil-next-line)
+      (evil-define-key 'insert tab-mode-map (kbd "<up>") 'evil-previous-line)
 
+      ; Normal mode bindings
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
-      (evil-define-key 'normal tab-mode-map "j" 'tab-down-staff)
-      (evil-define-key 'normal tab-mode-map "k" 'tab-up-staff)
+      (evil-define-key 'normal tab-mode-map "j" 'evil-next-line)
+      (evil-define-key 'normal tab-mode-map "k" 'evil-previous-line)
+
+      (evil-define-key 'normal tab-mode-map "o" 'tab-make-staff)
 
       (evil-define-key 'normal tab-mode-map "H" 'evil-backward-char)
       (evil-define-key 'normal tab-mode-map "L" 'evil-forward-char)
-      (evil-define-key 'normal tab-mode-map "J" 'evil-next-line)
-      (evil-define-key 'normal tab-mode-map "K" 'evil-previous-line)
+      (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
+      (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
+
+      (evil-define-key 'normal tab-mode-map (kbd "<S-left>") 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map (kbd "<S-right>") 'tab-forward-char)
+      (evil-define-key 'normal tab-mode-map (kbd "<S-down>") 'tab-down-staff)
+      (evil-define-key 'normal tab-mode-map (kbd "<S-up>") 'tab-up-staff)
+
+      ; Visual mode bindings
+      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
 
       ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
       ;; TODO: C-?	delete previous note/chord
