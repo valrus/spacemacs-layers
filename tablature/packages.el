@@ -144,6 +144,7 @@ Each entry is either:
 
 (defun tablature/tab-mode-settings ()
   (tablature/tab-mode-line)
+  (chord-mode)
   (setq-local evil-insert-state-cursor '("chartreuse3" box))
   (setq-local evil-move-cursor-back nil))
 

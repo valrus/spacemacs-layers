@@ -52,7 +52,7 @@ by =N=) is shown in the modeline and can be changed with =<= and =>=.
 
 | Navigation | =tab-mode= function         | Description                                              |
 |------------+-----------------------------+----------------------------------------------------------|
-| =<SPC>=  | ~tab-forward~               | Move one tab position forward                            |
+| =<SPC>=    | ~tab-forward~               | Move one tab position forward                            |
 | =C-h=      | ~tab-delete-note~           | delete previous (lead-mode) or current (chord-mode) note |
 | =C-?=      | ~tab-delete-chord-backward~ | delete previous note/chord                               |
 |            | ~tab-delete-chord-forward~  | delete current note/chord                                |
@@ -60,7 +60,7 @@ by =N=) is shown in the modeline and can be changed with =<= and =>=.
 | =[=        | ~tab-hammer~                | mark current note as hammer-on                           |
 | =]=        | ~tab-pull~                  | mark current note as pull-off                            |
 | =;=        | ~tab-bend~                  | mark current note as bend                                |
-| ='=        | ~tab-release~               | mark current note as release                             |
+| '         | ~tab-release~               | mark current note as release                             |
 | =/=        | ~tab-slide-up~              | mark current note as slide-up                            |
 | =\=        | ~tab-slide-down~            | mark current note as slide-down                          |
 | =~=        | ~tab-vibrato~               | mark current note as vibrato                             |
@@ -96,7 +96,7 @@ This table lists the tab-specific bindings so you can rebind them if you want.
 | =>=     | ~tab-increment-position~ | Increment base fret position by 1              |
 | =?=     | ~tab-set-position~       | Prompt for numeric entry of base fret position |
 | =\==    | ~tab-make-staff~         | Make a new tablature staff                     |
-| =\vert= | ~tab-barline~            | Change current tab position to a bar line      |
+| =|=     | ~tab-barline~            | Change current tab position to a bar line      |
 | =+=     | ~tab-transpose~          | transpose note by N frets                      |
 | =0=     | ~tab-up-12~              | move note up 12 frets                          |
 | =p=     | ~tab-down-12~            | move note down 12 frets                        |
@@ -119,8 +119,8 @@ are supposed to operate on them won't work.
 | ~tab-analyze-chord~       | Works, I think?                             | analyze chord (cursor on root note)                  |
 | ~tab-label-chord~         | Maybe works, but not at beginning of buffer | insert previously analyzed chord name                |
 | ~tab-note-name~           | Seems broken?                               | change whether chords are A# vs. Bb, etc.            |
-| ~tab-forward-barline~     | Works, but may I suggest =f\vert=?          | move forward one bar line                            |
-| ~tab-backward-barline~    | Works, but may I suggest =b\vert=?          | move back one bar line                               |
+| ~tab-forward-barline~     | Works, but so does =f|=                     | move forward one bar line                            |
+| ~tab-backward-barline~    | Works, but so does =b|=                     | move back one bar line                               |
 | ~tab-higher-string~       | Works if there's not already a note there   | move note to next higher string                      |
 | ~tab-lower-string~        | Works if there's not already a note there   | move note to next higher string                      |
 
