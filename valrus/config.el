@@ -18,6 +18,10 @@
 (defadvice evil-jumper/backward (after advice-for-evil-jumper/backward activate)
   (evil-scroll-line-to-center (line-number-at-pos)))
 
+;; Fix for evil-jump-backward not working after going to definition
+;; https://github.com/syl20bnr/spacemacs/issues/4942
+(evil-set-command-property 'spacemacs/evil-smart-goto-definition :jump t)
+
 ;;; Mode-specific settings
 ;; GNU makefile
 (defun my-gnumakefile-settings ()

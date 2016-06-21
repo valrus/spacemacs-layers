@@ -5,6 +5,10 @@
   "oc" 'my-open-config
   "oi" 'my-open-init)
 
+(spacemacs/set-leader-keys
+  "w-" 'split-window-below-and-focus
+  "w|" 'split-window-right-and-focus)
+
 ;;; Misc things I'm just used to
 (define-key evil-normal-state-map "U" 'undo-tree-redo)
 
@@ -36,4 +40,3 @@
   (evil-paste-before 1 register))
 
 (define-key evil-normal-state-map "R" 'evil-destroy-replace)
-
