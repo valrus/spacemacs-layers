@@ -1,10 +1,11 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: newfile
 # key: newfile
-# binding: direct-keybinding
 # expand-env: ((yas-indent-line 'fixed))
 # --
-from __future__ import (absolute_import, division, print_function, unicode_literals)
+from __future__ import absolute_import, division, print_function
+from builtins import (bytes, str, open, super, range,
+                      zip, round, input, int, pow, object)
 
 import sys
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter

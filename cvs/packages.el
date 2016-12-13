@@ -17,9 +17,6 @@
       ;; package names go here
       ))
 
-;; List of packages to exclude.
-(setq cvs-excluded-packages '())
-
 ;; For each package, define a function cvs/init-<package-name>
 ;;
 ;; (defun cvs/init-my-package ()

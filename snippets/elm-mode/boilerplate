@@ -30,8 +30,8 @@ view model =
     div
         []
         [ div
-                []
-                [ text model ]
+            []
+            [ text model ]
         ]
 
 
