@@ -26,16 +26,34 @@
     )
   "List of packages to exclude.")
 
-(defvar valrus-packages
+; List of all packages to install and/or initialized. Built-in packages
+; which require an initialization must be listed explicitly in the list.
+(setq valrus-packages
   '(
     fill-column-indicator
     flycheck
     persp-mode
     rainbow-delimiters
     yasnippet
+
+    (coffee-mode :excluded t)
+    (csharp-mode :excluded t)
+    (ensime :excluded t)
+    (less-css-mode :excluded t)
+    (powershell :excluded t)
+    (powershell-mode :excluded t)
+    (sbt-mode :excluded t)
+    (scala-mode2 :excluded t)
+    (scss-mode :excluded t)
+    (ac-ispell :excluded t)
+    (flyspell :excluded t)
+    (ispell :excluded t)
+    (smartparens :excluded t)
+    (vi-tilde-fringe :excluded t)
+    (monokai-theme :excluded t)
+    (zenburn-theme :excluded t)
     )
-  "List of all packages to install and/or initialized. Built-in packages
-which require an initialization must be listed explicitly in the list.")
+  )
 
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))

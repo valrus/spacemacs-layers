@@ -20,7 +20,7 @@
 
 ;; Fix for evil-jump-backward not working after going to definition
 ;; https://github.com/syl20bnr/spacemacs/issues/4942
-(evil-set-command-property 'spacemacs/evil-smart-goto-definition :jump t)
+;; (evil-set-command-property 'spacemacs/evil-smart-goto-definition :jump t)
 
 ;;; Mode-specific settings
 ;; GNU makefile
