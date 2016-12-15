@@ -7,8 +7,8 @@
     flycheck
     helm
     persp-mode
-    rainbow-delimiters
-    theming
+    ; rainbow-delimiters
+    ; theming
     yasnippet
 
     ;; Exclusions
@@ -59,15 +59,15 @@
 (defun valrus/post-init-flycheck ()
   (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
 
-;; (defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
-;;   ;; Turn off overlines; they mess up line spacing
-;;   (set-face-attribute 'rainbow-delimiters-unmatched-face nil
-;;                       :overline nil)
-;;   (set-face-attribute 'rainbow-delimiters-mismatched-face nil
-;;                       :overline nil)
-;;   (apply orig-fun args))
+(defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
+  ;; Turn off overlines; they mess up line spacing
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                      :overline nil)
+  (set-face-attribute 'rainbow-delimiters-mismatched-face nil
+                      :overline nil)
+  (apply orig-fun args))
 
-;; (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
+(advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))

@@ -104,6 +104,8 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map (kbd "<S-down>") 'tab-down-staff)
       (evil-define-key 'normal tab-mode-map (kbd "<S-up>") 'tab-up-staff)
 
+      (evil-define-key 'normal tab-mode-map "x" 'tab-delete-chord-forward)
+
       ; Visual mode bindings
       (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
 

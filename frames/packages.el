@@ -1,8 +1,8 @@
 (defvar frames-packages
   '(
     autofit-frame
-    frame-cmds
-    window+
+    (frame-cmds :toggle t)
+    (window+ :toggle t)
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
