@@ -783,12 +783,7 @@ or current note (chord-mode)."
 		(backward-char 1)
 		))
 
-		(if (bound-and-true-p chord-mode) (progn
-		(forward-char 1)
-		(delete-backward-char 3)
-		(insert "---")
-		(backward-char 1) 
-		))
+		(if (bound-and-true-p chord-mode) (tab-delete-current-note))
 	)
 	; else
 	(delete-backward-char count)

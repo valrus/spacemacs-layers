@@ -66,7 +66,7 @@ Each entry is either:
   (spaceline-define-segment base-fret-segment
     (format "Fret: %s" tab-position-as-string)
     :when (equal major-mode 'tab-mode))
-  (add-to-list 'spaceline-right 'base-fret-segment))
+  (spaceline-toggle-base-fret-segment-on))
 
 
 (defun tablature/init-tablature-mode ()
@@ -104,7 +104,7 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map (kbd "<S-down>") 'tab-down-staff)
       (evil-define-key 'normal tab-mode-map (kbd "<S-up>") 'tab-up-staff)
 
-      (evil-define-key 'normal tab-mode-map "x" 'tab-delete-chord-forward)
+      (evil-define-key 'normal tab-mode-map "x" 'tab-delete-current-note)
 
       ; Visual mode bindings
       (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
