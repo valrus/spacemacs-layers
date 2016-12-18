@@ -80,13 +80,15 @@
 "Numeric values of the six strings, high-to-low, in current tuning."
 )
 
+(defvar tab-line-header "-|" "Common beginning of string lines, after tuning")
+
 ; must match tab-current-tuning, above
-(defvar tab-0-string-prefix "e-|" "Unique beginning of string 0 line")
-(defvar tab-1-string-prefix "B-|" "Unique beginning of string 1 line")
-(defvar tab-2-string-prefix "G-|" "Unique beginning of string 2 line")
-(defvar tab-3-string-prefix "D-|" "Unique beginning of string 3 line")
-(defvar tab-4-string-prefix "A-|" "Unique beginning of string 4 line")
-(defvar tab-5-string-prefix "E-|" "Unique beginning of string 5 line")
+(defvar tab-0-string-prefix (concat "e" tab-line-header) "Unique beginning of string 0 line")
+(defvar tab-1-string-prefix (concat "B" tab-line-header) "Unique beginning of string 1 line")
+(defvar tab-2-string-prefix (concat "G" tab-line-header) "Unique beginning of string 2 line")
+(defvar tab-3-string-prefix (concat "D" tab-line-header) "Unique beginning of string 3 line")
+(defvar tab-4-string-prefix (concat "A" tab-line-header) "Unique beginning of string 4 line")
+(defvar tab-5-string-prefix (concat "E" tab-line-header) "Unique beginning of string 5 line")
 
 (defcustom tab-12-tone-chords
   t
@@ -576,6 +578,39 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 	(tab-check-in-tab)
 	))
 ) ; tab-backward-barline
+
+
+
+(defun tab-move-string (count up)
+  (let ((column (current-column))
+        (search-tab-line (concat "^." tab-line-header))
+        (real-case-fold-search case-fold-search)
+        (search-fun (if up 're-search-backward 're-search-forward))
+        (count-min (if up -1 0)))
+
+    (setq case-fold-search nil)
+    (while
+        (> count count-min)
+      (progn
+        (funcall search-fun search-tab-line nil t)
+        (setq count (1- count))
+        )
+      )
+    (beginning-of-line)
+    (forward-char column)
+    (tab-check-in-tab)
+    (setq case-fold-search real-case-fold-search)
+  ))
+
+
+(defun tab-up-string (count)
+  (interactive "p")
+  (tab-move-string count t))
+
+
+(defun tab-down-string (count)
+  (interactive "p")
+  (tab-move-string count nil))
 
 
 
