@@ -94,6 +94,11 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "j" 'tab-down-string)
       (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
 
+      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-char)
+      (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
+      (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
+
       (evil-define-key 'normal tab-mode-map "o" 'tab-make-staff)
 
       (evil-define-key 'normal tab-mode-map "w" 'tab-forward-barline)
