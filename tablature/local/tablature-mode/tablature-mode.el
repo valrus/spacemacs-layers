@@ -618,7 +618,8 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 (interactive "p")
 (let ((column (current-column))
       (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search))
+      (real-case-fold-search case-fold-search)
+      (starting-string tab-current-string))
 
 	(if (tab-check-in-tab) (previous-line (1+ tab-current-string)))
 
@@ -631,10 +632,10 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (beginning-of-line)
 (forward-char column)
+(next-line starting-string)
 (tab-check-in-tab)
 
 (setq case-fold-search real-case-fold-search)
-
 )) ; tab-up-staff
 
 
@@ -643,7 +644,8 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 (interactive "p")
 (let ((column (current-column))
       (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search))
+      (real-case-fold-search case-fold-search)
+      (starting-string tab-current-string))
 
 	(if (tab-check-in-tab) (next-line 1))
 
@@ -656,6 +658,7 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (beginning-of-line)
 (forward-char column)
+(next-line starting-string)
 (tab-check-in-tab)
 
 (setq case-fold-search real-case-fold-search)

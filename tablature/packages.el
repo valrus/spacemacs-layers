@@ -91,13 +91,16 @@ Each entry is either:
       ; Normal mode bindings
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
-      (evil-define-key 'normal tab-mode-map "j" 'tab-up-string)
-      (evil-define-key 'normal tab-mode-map "k" 'tab-down-string)
+      (evil-define-key 'normal tab-mode-map "j" 'tab-down-string)
+      (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
 
       (evil-define-key 'normal tab-mode-map "o" 'tab-make-staff)
 
       (evil-define-key 'normal tab-mode-map "w" 'tab-forward-barline)
       (evil-define-key 'normal tab-mode-map "b" 'tab-backward-barline)
+
+      (evil-define-key 'normal tab-mode-map "{" 'tab-up-staff)
+      (evil-define-key 'normal tab-mode-map "}" 'tab-down-staff)
 
       (evil-define-key 'normal tab-mode-map (kbd "<S-left>") 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map (kbd "<S-right>") 'tab-forward-char)
@@ -105,6 +108,7 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map (kbd "<S-up>") 'tab-up-staff)
 
       (evil-define-key 'normal tab-mode-map "x" 'tab-delete-current-note)
+      (evil-define-key 'normal tab-mode-map "X" 'tab-delete-chord-forward)
 
       ; Visual mode bindings
       (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
