@@ -581,19 +581,21 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 
 
-(defun tab-move-string (count up)
-  (let ((column (current-column))
+(defun tab-navigate-string (count)
+  (let (
+        (column (current-column))
         (search-tab-line (concat "^." tab-line-header))
         (real-case-fold-search case-fold-search)
-        (search-fun (if up 're-search-backward 're-search-forward))
-        (count-min (if up -1 0)))
+        (search-fun (if (> count 0) 're-search-forward 're-search-backward))
+        (count-index (abs count))
+        )
 
     (setq case-fold-search nil)
     (while
-        (> count count-min)
+        (> count-index 0)
       (progn
         (funcall search-fun search-tab-line nil t)
-        (setq count (1- count))
+        (setq count-index (1- count-index))
         )
       )
     (beginning-of-line)
@@ -605,12 +607,12 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (defun tab-up-string (count)
   (interactive "p")
-  (tab-move-string count t))
+  (tab-navigate-string (- (1+ count))))
 
 
 (defun tab-down-string (count)
   (interactive "p")
-  (tab-move-string count nil))
+  (tab-navigate-string count))
 
 
 
