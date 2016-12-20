@@ -703,7 +703,8 @@ not already in staff."
 
 (defun tab-column (character-string) ; ----------------------------------------
 "Draw vertical line of ARG down staff.  ARG must be 3-char string"
-(let ((linecount 6))
+(let ((linecount 6)
+      (starting-string tab-current-string))
 
 (backward-char 2)
 (setq temporary-goal-column (current-column))
@@ -717,8 +718,7 @@ not already in staff."
 	(setq linecount (1- linecount))
 	)
 
-(next-line -5)
-(setq tab-current-string 0)
+(next-line (- starting-string 5))
 
 	(if (< (current-column) (- (line-end-position) 5))
 	(forward-char 5)
