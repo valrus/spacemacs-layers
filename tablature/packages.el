@@ -62,13 +62,6 @@ Each entry is either:
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
 
-(defun tablature/post-init-spaceline ()
-  (spaceline-define-segment base-fret-segment
-    (format "Fret: %s" tab-position-as-string)
-    :when (equal major-mode 'tab-mode))
-  (spaceline-toggle-base-fret-segment-on))
-
-
 (defun tablature/init-tablature-mode ()
   (use-package tablature-mode
     :config
@@ -143,13 +136,22 @@ Each entry is either:
   			     "-%-")))
 
 
-(defun tablature/setup-spaceline ()
+(defun tablature/post-init-spaceline ()
   ; not very useful for tablature mode
-  (spaceline-toggle-line-column-off))
+  (spaceline-toggle-line-column-off)
+  (spaceline-define-segment tablature
+    (when (equal major-mode 'tab-mode)
+      (list
+       (if lead-mode "Lead" "Chord")
+       tab-position-as-string
+       ))
+    :separator ":")
+  (spaceline-toggle-base-fret-segment-on)
+  (spaceline-spacemacs-theme 'tablature))
 
 
 (defun tablature/tab-mode-line ()
-  (if (not (configuration-layer/package-usedp 'spaceline))
+  (when (not (configuration-layer/package-usedp 'spaceline))
     (tablature/setup-normal-mode-line)))
 
 
