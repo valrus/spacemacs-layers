@@ -64,6 +64,21 @@ Each entry is either:
 
 (defun tablature/init-tablature-mode ()
   (use-package tablature-mode
+    :mode "\\.tab"
+
+    :init
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'tab-mode
+        "ca" 'tab-analyze-chord
+        "cp" 'tab-label-chord
+        )
+
+      (dolist (x '(
+                   ("mc" . "chord")
+                   ))
+        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x)))
+      )
+
     :config
     (progn
       ; don't wait for tab-mode activation to create the mode-map
@@ -113,7 +128,8 @@ Each entry is either:
 
       ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
       ;; TODO: C-?	delete previous note/chord
-      )))
+      )
+    ))
 
 
 (defun tablature/setup-normal-mode-line ()
