@@ -156,8 +156,6 @@ Each entry is either:
 
 
 (defun tablature/post-init-spaceline ()
-  ; not very useful for tablature mode
-  (spaceline-toggle-line-column-off)
   (spaceline-define-segment tablature
     (when (equal major-mode 'tab-mode)
       (list
@@ -165,13 +163,16 @@ Each entry is either:
        tab-position-as-string
        ))
     :separator ":")
-  (spaceline-toggle-base-fret-segment-on)
+
+  (spaceline-toggle-tablature-on)
   (spaceline-spacemacs-theme 'tablature))
 
 
 (defun tablature/tab-mode-line ()
-  (when (not (configuration-layer/package-usedp 'spaceline))
-    (tablature/setup-normal-mode-line)))
+  (if (not (configuration-layer/package-usedp 'spaceline))
+      (tablature/setup-normal-mode-line)
+    (progn
+      (setq-local spaceline-line-column-p nil))))
 
 
 (defun tablature/tab-mode-settings ()
