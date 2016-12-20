@@ -125,6 +125,9 @@ Each entry is either:
 
       (evil-define-key 'normal tab-mode-map "x" 'tab-delete-current-note)
       (evil-define-key 'normal tab-mode-map "X" 'tab-delete-chord-forward)
+      (evil-define-key 'normal tab-mode-map "dc" 'tab-delete-chord-forward)
+
+      (evil-define-key 'normal tab-mode-map "|" 'tab-barline-in-place)
 
       ; Visual mode bindings
       (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)

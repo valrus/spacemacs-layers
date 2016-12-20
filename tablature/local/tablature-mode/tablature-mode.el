@@ -701,17 +701,18 @@ not already in staff."
 
 
 
-(defun tab-column (character-string) ; ----------------------------------------
-"Draw vertical line of ARG down staff.  ARG must be 3-char string"
+(defun toggle-barline (advance) ; --------------------------------
+"Toggle barline at point on staff. If ARG is true, advance point too."
 (let ((linecount 6)
-      (starting-string tab-current-string))
+      (starting-string tab-current-string)
+      (barline-string "--|"))
 
 (backward-char 2)
 (setq temporary-goal-column (current-column))
 (previous-line tab-current-string)
 
 	(while (> linecount 0)
-	(insert character-string)
+	(insert (if (looking-at barline-string) "---" barline-string))
 	(delete-char 3)
 	(backward-char 3)
 		(if (> linecount 1) (next-line 1))
@@ -720,21 +721,28 @@ not already in staff."
 
 (next-line (- starting-string 5))
 
-	(if (< (current-column) (- (line-end-position) 5))
+	(if (and advance (< (current-column) (- (line-end-position) 5)))
 	(forward-char 5)
 	(forward-char 2)
 	)
-)) ; tab-column
+))
 
+
+
+(defun tab-barline-in-place () ; ----------------------------------------------
+  "Draw a barline down staff"
+  (interactive)
+	(if (tab-check-in-tab)
+      (toggle-barline nil)
+    (insert (this-command-keys))))
 
 
 (defun tab-barline () ; -------------------------------------------------------
-"Draw a barline down staff"
-(interactive)
-	(if (tab-check-in-tab)
-	(tab-column "--|")
-	(insert (this-command-keys)))
-)
+  "Draw a barline down staff"
+  (interactive)
+  (if (tab-check-in-tab)
+      (toggle-barline t)
+    (insert (this-command-keys))))
 
 
 (defun tab-forward () ; -------------------------------------------------------
