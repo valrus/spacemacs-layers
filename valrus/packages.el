@@ -6,6 +6,8 @@
     fill-column-indicator
     flycheck
     helm
+    markdown-mode
+    neotree
     persp-mode
     rainbow-delimiters
     theming
@@ -71,6 +73,12 @@
 ;;   (apply orig-fun args))
 
 ;; (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
+
+(defun valrus/post-init-markdown-mode ()
+  (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
+
+(defun valrus/post-init-neotree ()
+  (setq neo-theme 'nerd))
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
