@@ -62,15 +62,23 @@ Each entry is either:
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
 
-(defun tablature/post-init-spaceline ()
-  (spaceline-define-segment base-fret-segment
-    (format "Fret: %s" tab-position-as-string)
-    :when (equal major-mode 'tab-mode))
-  (add-to-list 'spaceline-right 'base-fret-segment))
-
-
 (defun tablature/init-tablature-mode ()
   (use-package tablature-mode
+    :mode "\\.tab"
+
+    :init
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'tab-mode
+        "ca" 'tab-analyze-chord
+        "cp" 'tab-label-chord
+        )
+
+      (dolist (x '(
+                   ("mc" . "chord")
+                   ))
+        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x)))
+      )
+
     :config
     (progn
       ; don't wait for tab-mode activation to create the mode-map
@@ -86,30 +94,48 @@ Each entry is either:
       (evil-define-key 'insert tab-mode-map (kbd "<down>") 'evil-next-line)
       (evil-define-key 'insert tab-mode-map (kbd "<up>") 'evil-previous-line)
 
+      (evil-define-key 'insert tab-mode-map " " 'tab-forward)
+
       ; Normal mode bindings
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "j" 'tab-down-string)
+      (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
-      (evil-define-key 'normal tab-mode-map "j" 'evil-next-line)
-      (evil-define-key 'normal tab-mode-map "k" 'evil-previous-line)
+
+      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
+      (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
+      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-char)
+
+      (evil-define-key 'normal tab-mode-map (kbd "C-j") 'tab-lower-string)
+      (evil-define-key 'normal tab-mode-map (kbd "C-k") 'tab-higher-string)
 
       (evil-define-key 'normal tab-mode-map "o" 'tab-make-staff)
 
-      (evil-define-key 'normal tab-mode-map "H" 'evil-backward-char)
-      (evil-define-key 'normal tab-mode-map "L" 'evil-forward-char)
-      (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
-      (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
+      (evil-define-key 'normal tab-mode-map "w" 'tab-forward-barline)
+      (evil-define-key 'normal tab-mode-map "b" 'tab-backward-barline)
+
+      (evil-define-key 'normal tab-mode-map "{" 'tab-up-staff)
+      (evil-define-key 'normal tab-mode-map "}" 'tab-down-staff)
 
       (evil-define-key 'normal tab-mode-map (kbd "<S-left>") 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map (kbd "<S-right>") 'tab-forward-char)
       (evil-define-key 'normal tab-mode-map (kbd "<S-down>") 'tab-down-staff)
       (evil-define-key 'normal tab-mode-map (kbd "<S-up>") 'tab-up-staff)
 
+      (evil-define-key 'normal tab-mode-map "x" 'tab-delete-current-note)
+      (evil-define-key 'normal tab-mode-map "X" 'tab-delete-chord-forward)
+      (evil-define-key 'normal tab-mode-map "dc" 'tab-delete-chord-forward)
+
+      (evil-define-key 'normal tab-mode-map "|" 'tab-barline-in-place)
+
       ; Visual mode bindings
       (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
 
       ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
       ;; TODO: C-?	delete previous note/chord
-      )))
+      )
+    ))
 
 
 (defun tablature/setup-normal-mode-line ()
@@ -132,14 +158,24 @@ Each entry is either:
   			     "-%-")))
 
 
-(defun tablature/setup-spaceline ()
-  ; not very useful for tablature mode
-  (spaceline-toggle-line-column-off))
+(defun tablature/post-init-spaceline ()
+  (spaceline-define-segment tablature
+    (when (equal major-mode 'tab-mode)
+      (list
+       (if lead-mode "Lead" "Chord")
+       tab-position-as-string
+       ))
+    :separator ":")
+
+  (spaceline-toggle-tablature-on)
+  (spaceline-spacemacs-theme 'tablature))
 
 
 (defun tablature/tab-mode-line ()
   (if (not (configuration-layer/package-usedp 'spaceline))
-    (tablature/setup-normal-mode-line)))
+      (tablature/setup-normal-mode-line)
+    (progn
+      (setq-local spaceline-line-column-p nil))))
 
 
 (defun tablature/tab-mode-settings ()

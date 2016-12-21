@@ -80,13 +80,15 @@
 "Numeric values of the six strings, high-to-low, in current tuning."
 )
 
+(defvar tab-line-header "-|" "Common beginning of string lines, after tuning")
+
 ; must match tab-current-tuning, above
-(defvar tab-0-string-prefix "e-|" "Unique beginning of string 0 line")
-(defvar tab-1-string-prefix "B-|" "Unique beginning of string 1 line")
-(defvar tab-2-string-prefix "G-|" "Unique beginning of string 2 line")
-(defvar tab-3-string-prefix "D-|" "Unique beginning of string 3 line")
-(defvar tab-4-string-prefix "A-|" "Unique beginning of string 4 line")
-(defvar tab-5-string-prefix "E-|" "Unique beginning of string 5 line")
+(defvar tab-0-string-prefix (concat "e" tab-line-header) "Unique beginning of string 0 line")
+(defvar tab-1-string-prefix (concat "B" tab-line-header) "Unique beginning of string 1 line")
+(defvar tab-2-string-prefix (concat "G" tab-line-header) "Unique beginning of string 2 line")
+(defvar tab-3-string-prefix (concat "D" tab-line-header) "Unique beginning of string 3 line")
+(defvar tab-4-string-prefix (concat "A" tab-line-header) "Unique beginning of string 4 line")
+(defvar tab-5-string-prefix (concat "E" tab-line-header) "Unique beginning of string 5 line")
 
 (defcustom tab-12-tone-chords
   t
@@ -579,11 +581,47 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 
 
+(defun tab-navigate-string (count)
+  (let (
+        (column (current-column))
+        (search-tab-line (concat "^." tab-line-header))
+        (real-case-fold-search case-fold-search)
+        (search-fun (if (> count 0) 're-search-forward 're-search-backward))
+        (count-index (abs count))
+        )
+
+    (setq case-fold-search nil)
+    (while
+        (> count-index 0)
+      (progn
+        (funcall search-fun search-tab-line nil t)
+        (setq count-index (1- count-index))
+        )
+      )
+    (beginning-of-line)
+    (forward-char column)
+    (tab-check-in-tab)
+    (setq case-fold-search real-case-fold-search)
+  ))
+
+
+(defun tab-up-string (count)
+  (interactive "p")
+  (tab-navigate-string (- (1+ count))))
+
+
+(defun tab-down-string (count)
+  (interactive "p")
+  (tab-navigate-string count))
+
+
+
 (defun tab-up-staff (count) ; -------------------------------------------------
 (interactive "p")
 (let ((column (current-column))
       (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search))
+      (real-case-fold-search case-fold-search)
+      (starting-string tab-current-string))
 
 	(if (tab-check-in-tab) (previous-line (1+ tab-current-string)))
 
@@ -596,10 +634,10 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (beginning-of-line)
 (forward-char column)
+(next-line starting-string)
 (tab-check-in-tab)
 
 (setq case-fold-search real-case-fold-search)
-
 )) ; tab-up-staff
 
 
@@ -608,7 +646,8 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 (interactive "p")
 (let ((column (current-column))
       (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search))
+      (real-case-fold-search case-fold-search)
+      (starting-string tab-current-string))
 
 	(if (tab-check-in-tab) (next-line 1))
 
@@ -621,6 +660,7 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (beginning-of-line)
 (forward-char column)
+(next-line starting-string)
 (tab-check-in-tab)
 
 (setq case-fold-search real-case-fold-search)
@@ -661,40 +701,48 @@ not already in staff."
 
 
 
-(defun tab-column (character-string) ; ----------------------------------------
-"Draw vertical line of ARG down staff.  ARG must be 3-char string"
-(let ((linecount 6))
+(defun toggle-barline (advance) ; --------------------------------
+"Toggle barline at point on staff. If ARG is true, advance point too."
+(let ((linecount 6)
+      (starting-string tab-current-string)
+      (barline-string "--|"))
 
 (backward-char 2)
 (setq temporary-goal-column (current-column))
 (previous-line tab-current-string)
 
 	(while (> linecount 0)
-	(insert character-string)
+	(insert (if (looking-at barline-string) "---" barline-string))
 	(delete-char 3)
 	(backward-char 3)
 		(if (> linecount 1) (next-line 1))
 	(setq linecount (1- linecount))
 	)
 
-(next-line -5)
-(setq tab-current-string 0)
+(next-line (- starting-string 5))
 
-	(if (< (current-column) (- (line-end-position) 5))
+	(if (and advance (< (current-column) (- (line-end-position) 5)))
 	(forward-char 5)
 	(forward-char 2)
 	)
-)) ; tab-column
+))
 
+
+
+(defun tab-barline-in-place () ; ----------------------------------------------
+  "Draw a barline down staff"
+  (interactive)
+	(if (tab-check-in-tab)
+      (toggle-barline nil)
+    (insert (this-command-keys))))
 
 
 (defun tab-barline () ; -------------------------------------------------------
-"Draw a barline down staff"
-(interactive)
-	(if (tab-check-in-tab)
-	(tab-column "--|")
-	(insert (this-command-keys)))
-)
+  "Draw a barline down staff"
+  (interactive)
+  (if (tab-check-in-tab)
+      (toggle-barline t)
+    (insert (this-command-keys))))
 
 
 (defun tab-forward () ; -------------------------------------------------------
@@ -783,12 +831,7 @@ or current note (chord-mode)."
 		(backward-char 1)
 		))
 
-		(if (bound-and-true-p chord-mode) (progn
-		(forward-char 1)
-		(delete-backward-char 3)
-		(insert "---")
-		(backward-char 1) 
-		))
+		(if (bound-and-true-p chord-mode) (tab-delete-current-note))
 	)
 	; else
 	(delete-backward-char count)

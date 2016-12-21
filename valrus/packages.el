@@ -9,8 +9,8 @@
     markdown-mode
     neotree
     persp-mode
-    rainbow-delimiters
-    theming
+    ; rainbow-delimiters
+    ; theming
     yasnippet
 
     ;; Exclusions
@@ -40,10 +40,7 @@
   (turn-on-fci-mode))
 
 (defun valrus/post-init-yasnippet ()
-  (setq-default helm-ff-skip-boring-files t))
-
-(defun valrus/post-init-yasnippet ()
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/private/snippets"))
+  (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))
 
 (defun valrus/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@conf"
@@ -64,15 +61,15 @@
 (defun valrus/post-init-flycheck ()
   (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
 
-;; (defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
-;;   ;; Turn off overlines; they mess up line spacing
-;;   (set-face-attribute 'rainbow-delimiters-unmatched-face nil
-;;                       :overline nil)
-;;   (set-face-attribute 'rainbow-delimiters-mismatched-face nil
-;;                       :overline nil)
-;;   (apply orig-fun args))
+(defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
+  ;; Turn off overlines; they mess up line spacing
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                      :overline nil)
+  (set-face-attribute 'rainbow-delimiters-mismatched-face nil
+                      :overline nil)
+  (apply orig-fun args))
 
-;; (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
+(advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
