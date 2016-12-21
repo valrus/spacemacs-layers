@@ -10,7 +10,7 @@
     neotree
     persp-mode
     ; rainbow-delimiters
-    ; theming
+    theming
     yasnippet
 
     ;; Exclusions
@@ -69,7 +69,9 @@
                       :overline nil)
   (apply orig-fun args))
 
-(advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)
+(defun valrus/post-init-theming ()
+  (when (configuration-layer/package-usedp 'rainbow-delimiters)
+  (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)))
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
