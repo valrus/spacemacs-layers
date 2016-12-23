@@ -26,7 +26,8 @@
 (defun kivy/init-kivy-mode ()
   "Initialize kivy-mode."
   (use-package kivy-mode
-    :init (add-to-list 'auto-mode-alist '("\\.kv$" . kivy-mode))
+    :mode "\\.kv$"
+
     :config (when kivy-indent-on-enter
               (add-hook 'kivy-mode-hook
                         '(lambda ()
