@@ -71,11 +71,11 @@ Each entry is either:
       (spacemacs/set-leader-keys-for-major-mode 'tab-mode
         "ca" 'tab-analyze-chord
         "cp" 'tab-label-chord
+        "ll" 'tab-toggle-lyric-line
         )
 
-      (dolist (x '(
-                   ("mc" . "chord")
-                   ))
+      (dolist (x '(("mc" . "chord")
+                   ("ml" . "lyrics")))
         (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x)))
       )
 
@@ -109,6 +109,7 @@ Each entry is either:
 
       (evil-define-key 'normal tab-mode-map (kbd "C-j") 'tab-lower-string)
       (evil-define-key 'normal tab-mode-map (kbd "C-k") 'tab-higher-string)
+      (evil-define-key 'normal tab-mode-map (kbd "C-l") 'tab-toggle-lyric-line)
 
       (evil-define-key 'normal tab-mode-map "o" 'tab-make-staff)
 
@@ -182,7 +183,10 @@ Each entry is either:
   (tablature/tab-mode-line)
   (chord-mode)
   (setq-local evil-insert-state-cursor '("chartreuse3" box))
-  (setq-local evil-move-cursor-back nil))
+  (setq-local evil-move-cursor-back nil)
+  (setq-local indent-tabs-mode nil)
+  (setq-local tab-width 4)
+  )
 
 
 (defun tablature/post-init-tablature-mode ()

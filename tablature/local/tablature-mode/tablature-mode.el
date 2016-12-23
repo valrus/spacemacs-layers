@@ -118,6 +118,11 @@ Commands:
 \\{tab-mode-map}"
 )
 
+(defvar tab-saved-point
+  nil
+  "Saved point for moving between staff and lyrics."
+  )
+
 (defvar tab-current-string
 	0
 "What string cursor is on."
@@ -672,32 +677,55 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
   (or default-tablature-width (window-body-width)))
 
 
-(defun tab-make-staff () ; ------------------------------------------------- */
-"Make a tab staff.  Do below current staff if in staff, or at cursor if
-not already in staff."
-(interactive)
+(defun tab-toggle-lyric-line ()
+  (interactive)
+  (let ((starting-string tab-current-string))
+        (if (tab-check-in-tab)
+            (progn
+              (setq tab-saved-point (copy-marker (point)))
+              (if (> (forward-line (- 6 starting-string)) 0)
+                  (progn
+                    (end-of-line)
+                    (newline)
+                    (tab-to-tab-stop)
+                    (end-of-line))
+                                        ; else
+                  (end-of-line)
+                  ))
+                                        ; else
+          (goto-char tab-saved-point)
+    )))
 
-	(if (tab-check-in-tab) (progn
-	(forward-line (- 6 tab-current-string))
-	(beginning-of-line)
-	(newline 2)
-	)
-	; else
-	(beginning-of-line)
-	)
 
-(insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-(insert tab-1-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-(insert tab-2-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-(insert tab-3-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-(insert tab-4-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-(insert tab-5-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+(defun tab-make-staff ()
+  "Make a tab staff.  Do below current staff if in staff, or one line below
+cursor if not already in staff."
+  (interactive)
 
-(forward-line -6)
-(setq tab-current-string 0)
-(forward-char 5)
+  (if (tab-check-in-tab)
+      (progn
+        (forward-line (- 5 tab-current-string))
+        (beginning-of-line)
 
-) ; tab-make-staff
+        (newline (- 2 (forward-line 2)))
+        (forward-line -1))
+                                        ; else
+    (progn
+      (end-of-line)
+      (newline 2)
+      (beginning-of-line))
+    )
+
+  (insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+  (insert tab-1-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+  (insert tab-2-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+  (insert tab-3-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+  (insert tab-4-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+  (insert tab-5-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+
+  (forward-line -6)
+  (setq tab-current-string 0)
+  (forward-char 5))
 
 
 
