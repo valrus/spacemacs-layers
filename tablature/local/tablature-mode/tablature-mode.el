@@ -1345,53 +1345,66 @@ of note, then new name."
 )) ; tab-note-name
 
 
+(defun tab-goto-chord-label ()
+  (interactive)
+
+  ;; go to appropriate column, and to line above tab
+  (let ((chord-column)
+        (name-begin))
+
+  (backward-char 1)
+  (setq chord-column (current-column))
+  (setq temporary-goal-column chord-column)
+  (previous-line (1+ tab-current-string))
+
+  ;; insert spaces if necessary
+  (if (< (current-column) chord-column)
+      (progn
+        ;; insert spaces
+        (indent-to-column chord-column)
+        (setq name-begin (point-marker))
+        (beginning-of-line)
+        (untabify (point-marker) name-begin)
+        (move-to-column chord-column)))))
+
+
+(defun tab-delete-chord-label ()
+  (interactive)
+
+  (save-excursion
+    (tab-goto-chord-label)
+      ;; delete previous chord (replace with spaces)
+      (save-excursion
+        (while (looking-at "\\S-") (progn (delete-char 1) (insert " "))))))
+
 
 (defun tab-label-chord () ; ---------------------------------------------------
 "Insert previously analyzed chord above current tab staff.  Can only be
 used immediately after `\\[tab-analyze-chord]' (tab-analyze-chord)"
 (interactive)
 
-(let ((name-width (length tab-last-chord))
-      (chord-column)
-      (name-begin)
-      (delete-begin)
-      (placemark (point-marker)))
+(save-excursion
+  (let ((name-width (length tab-last-chord))
+        (chord-column)
+        (name-begin)
+        (name-end))
 
-	(if (not (equal last-command 'tab-analyze-chord))
-	(error "Use only immediately after `%s' (tab-analyze-chord)"
-	       (car (where-is-internal 'tab-analyze-chord tab-mode-map))))
+    (unless (equal last-command 'tab-analyze-chord)
+    (error "Use only immediately after `%s' (tab-analyze-chord) - last cmd `%s'"
+           (car (where-is-internal 'tab-analyze-chord tab-mode-map))
+           (symbol-name last-command)))
 
-; go to appropriate column, and to line above tab
-	(cond
-	((= name-width 2) (backward-char 1))
-	((> name-width 2) (backward-char 2))
-	)
-(setq chord-column (current-column))
-(setq temporary-goal-column chord-column)
-(previous-line (1+ tab-current-string))
+    (tab-delete-chord-label)
 
-; insert spaces if necessary
-	(if (< (current-column) chord-column) (progn
-	; insert spaces
-	(indent-to-column chord-column)
-	(setq name-begin (point-marker))
-	(beginning-of-line)
-	(untabify (point-marker) name-begin)
-	(move-to-column chord-column)
-	))
+    ;; insert chord name
+    (tab-goto-chord-label)
+    (insert tab-last-chord)
 
-; insert chord name
-(insert tab-last-chord)
-
-; remove spaces equal to inserted name
-	(while (and (> name-width 0) (looking-at " " )) (progn
-	(delete-char 1)
-	(setq name-width (1- name-width))
-	))
-
-(goto-char placemark)
-
-)) ; tab-label-chord
+    ;; remove spaces equal to inserted name
+    (while (and (> name-width 0) (looking-at " " ))
+      (progn
+        (delete-char 1)
+        (setq name-width (1- name-width)))))))
 
 
 

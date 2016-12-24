@@ -71,6 +71,8 @@ Each entry is either:
       (spacemacs/set-leader-keys-for-major-mode 'tab-mode
         "ca" 'tab-analyze-chord
         "cp" 'tab-label-chord
+        "cd" 'tab-delete-chord-label
+        "cg" 'tab-goto-chord-label
         "ll" 'tab-toggle-lyric-line
         )
 
