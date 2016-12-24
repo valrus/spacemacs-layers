@@ -521,39 +521,37 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 
 
-(defun tab-set-position (fret) ; ----------------------------------------------
-"Prompt for numeric entry of current fret position"
-(interactive "P")
-	(if (tab-check-in-tab) (progn
-		(if fret 
-		(setq tab-position fret)
-		(progn ; else
-		(setq fret (read-string "Fret: "))
-		(setq tab-position (string-to-int fret))
-		))
+(defun tab-set-position (fret)
+  "Prompt for numeric entry of current fret position"
+  (interactive "P")
+  (if (tab-check-in-tab)
+      (progn
+        (if fret
+            (setq tab-position fret)
+          ;; else
+          (setq fret (read-string "Fret: "))
+          (setq tab-position (string-to-int fret)))
 
-		(if (< tab-position 0) (setq tab-position 0))
-	(setq tab-position-as-string (int-to-string tab-position))
-	(set-buffer-modified-p (buffer-modified-p))
-	)
-	; else
-	(insert (this-command-keys)))
-)   ; tab-set-position
-
+        (if (< tab-position 0) (setq tab-position 0))
+        (setq tab-position-as-string (int-to-string tab-position))
+        (set-buffer-modified-p (buffer-modified-p))
+        )
+    ;; else
+    (insert (this-command-keys))))
 
 
-(defun tab-forward-char (count) ; ---------------------------------------------
+(defun tab-forward-char (count)
 (interactive "p")
 (let ((original-column (current-column)))
 
-	(if (tab-check-in-tab) (progn
-		(if (< original-column 5) (backward-char 3))
+  (if (tab-check-in-tab) (progn
+    (if (< original-column 5) (backward-char 3))
 	(forward-char (* count 3))
 	)
-	; else
+	;; else
 	(forward-char count)
 	)
-)) ; tab-forward-char
+))
 
 
 
@@ -585,29 +583,29 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 ) ; tab-backward-barline
 
 
+(defun choose-re-search (count)
+  (if (> count 0) 're-search-forward 're-search-backward))
+
 
 (defun tab-navigate-string (count)
-  (let (
-        (column (current-column))
+  (let ((column (current-column))
         (search-tab-line (concat "^." tab-line-header))
         (real-case-fold-search case-fold-search)
-        (search-fun (if (> count 0) 're-search-forward 're-search-backward))
-        (count-index (abs count))
-        )
+        (search-fun (choose-re-search count))
+        (loop-count (abs count)))
 
     (setq case-fold-search nil)
     (while
-        (> count-index 0)
+        (> loop-count 0)
       (progn
         (funcall search-fun search-tab-line nil t)
-        (setq count-index (1- count-index))
+        (setq loop-count (1- loop-count))
         )
       )
     (beginning-of-line)
     (forward-char column)
     (tab-check-in-tab)
-    (setq case-fold-search real-case-fold-search)
-  ))
+    (setq case-fold-search real-case-fold-search)))
 
 
 (defun tab-up-string (count)
@@ -620,57 +618,45 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
   (tab-navigate-string count))
 
 
+(defun move-staff-and-restore-location (count string column)
+  (let ((search-top (concat "^" tab-0-string-prefix))
+        (real-case-fold-search case-fold-search)
+        (search-fun (choose-re-search count))
+        (loop-count (abs count)))
 
-(defun tab-up-staff (count) ; -------------------------------------------------
-(interactive "p")
-(let ((column (current-column))
-      (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search)
-      (starting-string tab-current-string))
+    (setq case-fold-search nil)
 
-	(if (tab-check-in-tab) (previous-line (1+ tab-current-string)))
+    (while (> loop-count 0)
+      (progn
+        (funcall search-fun search-top nil t)
+        (setq loop-count (1- loop-count))
+        ))
 
-(setq case-fold-search nil)
+    (move-to-column column)
+    (next-line string)
+    (tab-check-in-tab)
 
-	(while (> count 0) (progn
-	(re-search-backward search-top nil t)
-	(setq count (1- count))
-	))
-
-(beginning-of-line)
-(forward-char column)
-(next-line starting-string)
-(tab-check-in-tab)
-
-(setq case-fold-search real-case-fold-search)
-)) ; tab-up-staff
+    (setq case-fold-search real-case-fold-search)))
 
 
+(defun tab-up-staff (count)
+  (interactive "p")
+  (let ((column (current-column))
+        (starting-string tab-current-string))
 
-(defun tab-down-staff (count) ; -----------------------------------------------
-(interactive "p")
-(let ((column (current-column))
-      (search-top (concat "^" tab-0-string-prefix))
-      (real-case-fold-search case-fold-search)
-      (starting-string tab-current-string))
+    (if (tab-check-in-tab) (previous-line (1+ tab-current-string)))
 
-	(if (tab-check-in-tab) (next-line 1))
+    (move-staff-and-restore-location (- count) starting-string column)))
 
-(setq case-fold-search nil)
 
-	(while (> count 0) (progn
-	(re-search-forward search-top nil t)
-	(setq count (1- count))
-	))
+(defun tab-down-staff (count)
+  (interactive "p")
+  (let ((column (current-column))
+        (starting-string tab-current-string))
 
-(beginning-of-line)
-(forward-char column)
-(next-line starting-string)
-(tab-check-in-tab)
+    (if (tab-check-in-tab) (next-line 1))
 
-(setq case-fold-search real-case-fold-search)
-
-)) ; tab-down-staff
+    (move-staff-and-restore-location count starting-string column)))
 
 
 (defun new-tab-line-width ()
@@ -680,21 +666,20 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 (defun tab-toggle-lyric-line ()
   (interactive)
   (let ((starting-string tab-current-string))
-        (if (tab-check-in-tab)
-            (progn
-              (setq tab-saved-point (copy-marker (point)))
-              (if (> (forward-line (- 6 starting-string)) 0)
-                  (progn
-                    (end-of-line)
-                    (newline)
-                    (tab-to-tab-stop)
-                    (end-of-line))
-                                        ; else
-                  (end-of-line)
-                  ))
-                                        ; else
-          (goto-char tab-saved-point)
-    )))
+    (if (tab-check-in-tab)
+        (progn
+          (setq tab-saved-point (copy-marker (point)))
+          (if (> (forward-line (- 6 starting-string)) 0)
+              (progn
+                (end-of-line)
+                (newline)
+                (tab-to-tab-stop)
+                (end-of-line))
+            ;; else
+            (end-of-line)
+            ))
+      ;; else
+      (goto-char tab-saved-point))))
 
 
 (defun tab-make-staff ()
@@ -709,12 +694,11 @@ cursor if not already in staff."
 
         (newline (- 2 (forward-line 2)))
         (forward-line -1))
-                                        ; else
+    ;; else
     (progn
       (end-of-line)
       (newline 2)
-      (beginning-of-line))
-    )
+      (beginning-of-line)))
 
   (insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
   (insert tab-1-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
