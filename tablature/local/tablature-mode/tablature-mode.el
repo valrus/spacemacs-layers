@@ -215,7 +215,7 @@ or
 
 	C-i	insert blank space
 
-	|	enter bar line
+	|	toggle bar line
 
 	[	mark current note as hammer-on
 	]	mark current note as pull-off
