@@ -541,46 +541,40 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 
 (defun tab-forward-char (count)
-(interactive "p")
-(let ((original-column (current-column)))
+  (interactive "p")
+  (let ((original-column (current-column)))
 
-  (if (tab-check-in-tab) (progn
-    (if (< original-column 5) (backward-char 3))
-	(forward-char (* count 3))
-	)
-	;; else
-	(forward-char count)
-	)
-))
-
-
-
-(defun tab-backward-char (count) ; --------------------------------------------
-(interactive "p")
-	(if (tab-check-in-tab) (setq count (* count 3)))
-(backward-char count)
-) ; tab-backward-char
+    (if (tab-check-in-tab)
+        (progn
+          (if (< original-column 5) (backward-char 3))
+          (forward-char (* count 3))
+          )
+      ;; else
+      (forward-char count))))
 
 
 
-(defun tab-forward-barline () ; -----------------------------------------------
+(defun tab-backward-char (count)
+  (interactive "p")
+  (if (tab-check-in-tab) (setq count (* count 3)))
+  (backward-char count))
+
+
+
+(defun tab-forward-barline ()
 (interactive)
 	(if (tab-check-in-tab) (progn
 		(if (looking-at "|") (forward-char 1))
 	(re-search-forward "|\\|$")
-	(tab-check-in-tab)
-	))
-) ; tab-forward-barline
+	(tab-check-in-tab))))
 
 
 
-(defun tab-backward-barline () ; ----------------------------------------------
+(defun tab-backward-barline ()
 (interactive)
 	(if (tab-check-in-tab) (progn
 	(re-search-backward "|\\|^")
-	(tab-check-in-tab)
-	))
-) ; tab-backward-barline
+	(tab-check-in-tab))))
 
 
 (defun choose-re-search (count)
@@ -712,36 +706,31 @@ cursor if not already in staff."
   (forward-char 5))
 
 
+(defun toggle-barline (advance)
+  "Toggle barline at point on staff. If ARG is true, advance point too."
+  (let ((linecount 6)
+        (starting-string tab-current-string)
+        (barline-string "--|"))
 
-(defun toggle-barline (advance) ; --------------------------------
-"Toggle barline at point on staff. If ARG is true, advance point too."
-(let ((linecount 6)
-      (starting-string tab-current-string)
-      (barline-string "--|"))
+    (backward-char 2)
+    (setq temporary-goal-column (current-column))
+    (previous-line tab-current-string)
 
-(backward-char 2)
-(setq temporary-goal-column (current-column))
-(previous-line tab-current-string)
+    (while (> linecount 0)
+      (insert (if (looking-at barline-string) "---" barline-string))
+      (delete-char 3)
+      (backward-char 3)
+      (if (> linecount 1) (next-line 1))
+      (setq linecount (1- linecount)))
 
-	(while (> linecount 0)
-	(insert (if (looking-at barline-string) "---" barline-string))
-	(delete-char 3)
-	(backward-char 3)
-		(if (> linecount 1) (next-line 1))
-	(setq linecount (1- linecount))
-	)
+    (next-line (- starting-string 5))
 
-(next-line (- starting-string 5))
-
-	(if (and advance (< (current-column) (- (line-end-position) 5)))
-	(forward-char 5)
-	(forward-char 2)
-	)
-))
+    (if (and advance (< (current-column) (- (line-end-position) 5)))
+        (forward-char 5)
+      (forward-char 2))))
 
 
-
-(defun tab-barline-in-place () ; ----------------------------------------------
+(defun tab-barline-in-place ()
   "Draw a barline down staff"
   (interactive)
 	(if (tab-check-in-tab)
@@ -749,7 +738,7 @@ cursor if not already in staff."
     (insert (this-command-keys))))
 
 
-(defun tab-barline () ; -------------------------------------------------------
+(defun tab-barline ()
   "Draw a barline down staff"
   (interactive)
   (if (tab-check-in-tab)
@@ -757,141 +746,125 @@ cursor if not already in staff."
     (insert (this-command-keys))))
 
 
-(defun tab-forward () ; -------------------------------------------------------
-"Move cursor forward one tablature space"
-(interactive)
-(let ((original-column (current-column)))
+(defun tab-forward ()
+  "Move cursor forward one tablature space"
+  (interactive)
+  (let ((original-column (current-column)))
 
-	(if (tab-check-in-tab) (progn
-		(if (< original-column 5) (backward-char 3))
-	(forward-char 3)
-	)
-	; else
-	(insert (this-command-keys)))
-)) ; tab-forward
-
+    (if (tab-check-in-tab)
+        (progn
+          (if (< original-column 5) (backward-char 3))
+          (forward-char 3))
+      ;; else
+      (insert (this-command-keys)))))
 
 
-(defun tab-delete () ; --------------------------------------------------------
-"Delete vertical `chord' of notes"
-(let ((index 0) (placemark))
-(setq temporary-goal-column (current-column))
-(previous-line tab-current-string)
-(backward-char 2)
-	(while (< index 6)
-	(delete-char 3)
-	(setq placemark (point-marker))
-	(end-of-line)
-	(insert "---")
-	(goto-char placemark)
-	(setq temporary-goal-column (current-column))
-		(if (< index 5) (next-line 1))
-	(setq index (1+ index))
-	)
+(defun tab-delete ()
+  "Delete vertical `chord' of notes"
+  (let ((index 0) (placemark))
+    (setq temporary-goal-column (current-column))
+    (previous-line tab-current-string)
+    (backward-char 2)
+    (while (< index 6)
+      (delete-char 3)
+      (setq placemark (point-marker))
+      (end-of-line)
+      (insert "---")
+      (goto-char placemark)
+      (setq temporary-goal-column (current-column))
+      (if (< index 5) (next-line 1))
+      (setq index (1+ index)))
 
-	(if (/= tab-current-string 5) (next-line (- tab-current-string 5)))
-(forward-char 2)
-)) ; tab-delete
+    (if (/= tab-current-string 5) (next-line (- tab-current-string 5)))
+    (forward-char 2)))
 
 
+(defun tab-delete-chord-forward (count)
+  "Delete vertical `chord' of notes at cursor position"
+  (interactive "p")
+  (if (<= count 0) (setq count 1))
 
-(defun tab-delete-chord-forward (count) ; -------------------------------------
-"Delete vertical `chord' of notes at cursor position"
-(interactive "p")
-	(if (<= count 0) (setq count 1))
-
-	(if (tab-check-in-tab)
-		(while (> count 0) (progn
-		(tab-delete)
-		(setq count (1- count))
-		))
-	; else
-	(delete-char count)
-	)
-) ; tab-delete-chord-forward
+  (if (tab-check-in-tab)
+      (while (> count 0)
+        (progn
+          (tab-delete)
+          (setq count (1- count))))
+    ;; else
+    (delete-char count)))
 
 
+(defun tab-delete-chord-backward (count)
+  "Delete vertical `chord' of notes to left of cursor position"
+  (interactive "p")
+  (if (<= count 0) (setq count 1))
 
-(defun tab-delete-chord-backward (count) ; ------------------------------------
-"Delete vertical `chord' of notes to left of cursor position"
-(interactive "p")
-	(if (<= count 0) (setq count 1))
-
-	(if (tab-check-in-tab)
-		(while (and (> count 0) (> (current-column) 5)) (progn
-		(backward-char 3)
-		(tab-delete)
-		(setq count (1- count))
-		))
-	; else
-	(delete-backward-char count)
-	)
-) ; tab-delete-chord-backward
+  (if (tab-check-in-tab)
+      (while (and (> count 0) (> (current-column) 5))
+        (progn
+          (backward-char 3)
+          (tab-delete)
+          (setq count (1- count))))
+    ;; else
+    (delete-backward-char count)))
 
 
-
-(defun tab-delete-note (count) ; ----------------------------------------------
-"Delete previous note on current string (lead-mode) 
+(defun tab-delete-note (count)
+  "Delete previous note on current string (lead-mode) 
 or current note (chord-mode)."
-(interactive "p")
+  (interactive "p")
 
-	(if (tab-check-in-tab) (progn
-		(if (and (bound-and-true-p lead-mode) (> (current-column) 5)) (progn
-		(backward-char 2)
-		(delete-backward-char 3)
-		(insert "---")
-		(backward-char 1)
-		))
+  (if (tab-check-in-tab)
+      (progn
+        (if (and (bound-and-true-p lead-mode) (> (current-column) 5))
+            (progn
+              (backward-char 2)
+              (delete-backward-char 3)
+              (insert "---")
+              (backward-char 1)))
 
-		(if (bound-and-true-p chord-mode) (tab-delete-current-note))
-	)
-	; else
-	(delete-backward-char count)
-	)
-) ; tab-delete-note
+        (if (bound-and-true-p chord-mode) (tab-delete-current-note)))
+    ;; else
+    (delete-backward-char count)))
 
 
+(defun tab-delete-current-note ()
+  "Delete note (if any) that cursor is on, regardless of minor mode"
+  (interactive)
 
-(defun tab-delete-current-note () ; -------------------------------------------
-"Delete note (if any) that cursor is on, regardless of minor mode"
-(interactive)
-
-	(if (tab-check-in-tab) (progn
-	(forward-char 1)
-	(delete-backward-char 3)
-	(insert "---")
-	(backward-char 1) 
-	))
-) ; tab-delete-current-note
+  (if (tab-check-in-tab)
+      (progn
+        (forward-char 1)
+        (delete-backward-char 3)
+        (insert "---")
+        (backward-char 1))))
 
 
+(defun tab-insert (count)
+  "Insert blank tablature space at cursor position"
+  (interactive "p")
 
-(defun tab-insert (count) ; ---------------------------------------------------
-"Insert blank tablature space at cursor position"
-(interactive "p")
-
-	(if (tab-check-in-tab)
-	(let ((index 0) (placemark))
-	(setq temporary-goal-column (current-column))
-	(previous-line tab-current-string)
-	(backward-char 2)
-		(while (< index 6)
-		(setq placemark (point-marker))
-		(insert-char ?- (* count 3))
-		(end-of-line)
-		(delete-backward-char (* count 3))
-		(goto-char placemark)
-		(setq temporary-goal-column (current-column))
-			(if (< index 5) (next-line 1))
-		(setq index (1+ index))
-		)
-	(next-line (- tab-current-string 5))
-	(forward-char 2)
-	)
-	; else
-	(insert-char ?\t 1)
-	)
-) ; tab-insert
+  (if (tab-check-in-tab)
+      (let ((index 0) (placemark))
+        (setq temporary-goal-column (current-column))
+        (previous-line tab-current-string)
+        (backward-char 2)
+        (while (< index 6)
+          (setq placemark (point-marker))
+          (insert-char ?- (* count 3))
+          (end-of-line)
+          (delete-backward-char (* count 3))
+          (goto-char placemark)
+          (setq temporary-goal-column (current-column))
+          (if (< index 5) (next-line 1))
+          (setq index (1+ index))
+          )
+        (next-line (- tab-current-string 5))
+        (forward-char 2)
+        )
+    ;; else
+    (insert-char ?\t 1)
+    )
+  )
 
 
 
