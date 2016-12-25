@@ -162,7 +162,7 @@ for automatic insertion into tab by `\\[tab-label-chord]' (tab-label-chord)"
 
 
 (define-derived-mode tab-mode fundamental-mode "Tablature"
-"Major mode for entering tablature.  Always use minor modes lead-mode
+  "Major mode for entering tablature.  Always use minor modes lead-mode
 or chord-mode instead.
 
 In tab-mode, single keys represent notes on the guitar fretboard, and
@@ -184,68 +184,68 @@ chords) until manually moved forward with SPACE or `\\[forward-char]'.  In
 lead-mode, the cursor automatically advances after each note.
 
 For more information on a key or action, do:
-	`\\[describe-key]' and then enter the key(s) for the action
+  `\\[describe-key]' and then enter the key(s) for the action
 or
-	`\\[describe-function]' and then enter the name of the action
+  `\\[describe-function]' and then enter the name of the action
 
 
-	KEY	ACTION
+  KEY	ACTION
 
-	{	enter chord mode
-	}	enter lead mode
+  {	enter chord mode
+  }	enter lead mode
 
-	=	make a new tablature staff
+  =	make a new tablature staff
 
-	<	decrement base fret position by one (is printed on mode line)
-	>	increment base fret position by one (is printed on mode line)
-	?	prompt for numeric entry of base fret position
+  <	decrement base fret position by one (is printed on mode line)
+  >	increment base fret position by one (is printed on mode line)
+  ?	prompt for numeric entry of base fret position
 
-	SPACE 	move one tab position forward 
-	\\[tab-forward-char]	move one tab position forward 
-	\\[tab-backward-char]	move one tab position backward 
-	\\[tab-forward-barline]	move forward one bar line
-	\\[tab-backward-barline]	move back one bar line
-	\\[tab-up-staff]	move up one staff
-	\\[tab-down-staff]	move down one staff
+  SPACE 	move one tab position forward
+  \\[tab-forward-char]	move one tab position forward
+  \\[tab-backward-char]	move one tab position backward
+  \\[tab-forward-barline]	move forward one bar line
+  \\[tab-backward-barline]	move back one bar line
+  \\[tab-up-staff]	move up one staff
+  \\[tab-down-staff]	move down one staff
 
 
-	C-h	delete previous (lead-mode) or current (chord-mode) note
-	C-?	delete previous note/chord
-	\\[tab-delete-chord-forward]	delete current note/chord
+  C-h	delete previous (lead-mode) or current (chord-mode) note
+  C-?	delete previous note/chord
+  \\[tab-delete-chord-forward]	delete current note/chord
 
-	C-i	insert blank space
+  C-i	insert blank space
 
-	|	toggle bar line
+  |	toggle bar line
 
-	[	mark current note as hammer-on
-	]	mark current note as pull-off
-	;	mark current note as bend
-	'	mark current note as release
-	/	mark current note as slide-up
-	\	mark current note as slide-down
-	~	mark current note as vibrato
-	(	mark current note as ghost note
-	-	mark current note as normal note
+  [	mark current note as hammer-on
+  ]	mark current note as pull-off
+  ;	mark current note as bend
+  '	mark current note as release
+  /	mark current note as slide-up
+  \	mark current note as slide-down
+  ~	mark current note as vibrato
+  (	mark current note as ghost note
+  -	mark current note as normal note
 
-	+	transpose notes in region by N frets (tab-transpose)
+  +	transpose notes in region by N frets (tab-transpose)
 
-	\\[xfretboard]	start xfretboard (optional graphical interface)
+  \\[xfretboard]	start xfretboard (optional graphical interface)
 
-	\\[tab-copy-region-as-kill]	memorize tab between dot and mark (incl).
-	\\[tab-kill-region]	as above, but also delete
-	\\[tab-yank]	insert previously killed tablature
+  \\[tab-copy-region-as-kill]	memorize tab between dot and mark (incl).
+  \\[tab-kill-region]	as above, but also delete
+  \\[tab-yank]	insert previously killed tablature
 
-	\\[tab-copy-retune]	copy tab staff, transposing to current tuning
-	\\[tab-learn-tuning]	memorize new tuning (cursor first string)
-	\\[tab-analyze-chord]	analyze chord (cursor on root note)
-	\\[tab-label-chord]	insert previously analyzed chord name
-	\\[tab-note-name]	change whether chords are A# vs. Bb, etc.
+  \\[tab-copy-retune]	copy tab staff, transposing to current tuning
+  \\[tab-learn-tuning]	memorize new tuning (cursor first string)
+  \\[tab-analyze-chord]	analyze chord (cursor on root note)
+  \\[tab-label-chord]	insert previously analyzed chord name
+  \\[tab-note-name]	change whether chords are A# vs. Bb, etc.
 
-	\\[tab-higher-string]	move note to next higher string
-	\\[tab-lower-string]	move note to next higher string
+  \\[tab-higher-string]	move note to next higher string
+  \\[tab-lower-string]	move note to next higher string
 
-	\\[tab-up-12]	move note up   12 frets
-	\\[tab-down-12]	move note down 12 frets
+  \\[tab-up-12]	move note up   12 frets
+  \\[tab-down-12]	move note down 12 frets
 
 Tablature mode recognizes when the cursor is on a tab staff (and draws
 new tab staffs) with six, three-character long, strings.  Each of the six
@@ -257,28 +257,26 @@ lines, and use `\\[execute-extended-command] tab-learn-tuning'.
 Full list of commands:
 \\{tab-mode-map}"
 
-	(if (not tab-mode-map) (tab-make-mode-map))
-(use-local-map tab-mode-map)
+  (if (not tab-mode-map) (tab-make-mode-map))
+  (use-local-map tab-mode-map)
 
-(make-local-variable 'tab-current-string)
-(make-local-variable 'tab-position)
-(make-local-variable 'tab-position-as-string)
-(make-local-variable 'tab-pending-embellishment)
-(make-local-variable 'tab-killed-width)
-(make-local-variable 'tab-note-names)
-(make-local-variable 'tab-last-chord)
-(make-local-variable 'tab-current-tuning)
-(make-local-variable 'tab-12-tone-chords)
-(make-local-variable 'tab-process)
-(make-local-variable 'tab-0-string-prefix)
-(make-local-variable 'tab-1-string-prefix)
-(make-local-variable 'tab-2-string-prefix)
-(make-local-variable 'tab-3-string-prefix)
-(make-local-variable 'tab-4-string-prefix)
-(make-local-variable 'tab-5-string-prefix)
-(make-local-variable 'fretboard-program-name)
-) ; tab-mode
-
+  (make-local-variable 'tab-current-string)
+  (make-local-variable 'tab-position)
+  (make-local-variable 'tab-position-as-string)
+  (make-local-variable 'tab-pending-embellishment)
+  (make-local-variable 'tab-killed-width)
+  (make-local-variable 'tab-note-names)
+  (make-local-variable 'tab-last-chord)
+  (make-local-variable 'tab-current-tuning)
+  (make-local-variable 'tab-12-tone-chords)
+  (make-local-variable 'tab-process)
+  (make-local-variable 'tab-0-string-prefix)
+  (make-local-variable 'tab-1-string-prefix)
+  (make-local-variable 'tab-2-string-prefix)
+  (make-local-variable 'tab-3-string-prefix)
+  (make-local-variable 'tab-4-string-prefix)
+  (make-local-variable 'tab-5-string-prefix)
+  (make-local-variable 'fretboard-program-name))
 
 
 (define-minor-mode lead-mode
@@ -290,9 +288,8 @@ Use `\\[describe-function] tab-mode' to see documentation for tab-mode."
 
   (setq chord-mode nil)
 
-  (set-buffer-modified-p (buffer-modified-p))   ; No-op, but updates mode line.
-  )   ; lead-mode
-
+  ;; No-op, but updates mode line.
+  (set-buffer-modified-p (buffer-modified-p)))
 
 
 (define-minor-mode chord-mode
@@ -304,29 +301,26 @@ Use `\\[describe-function] tab-mode' to see documentation for tab-mode."
 
   (setq lead-mode nil)
 
-  (set-buffer-modified-p (buffer-modified-p))   ; No-op, but updates mode line.
-  )   ; chord-mode
+  ;; No-op, but updates mode line.
+  (set-buffer-modified-p (buffer-modified-p)))
 
 
 
-(defun tab-12-tone-chords (arg) ; ---------------------------------------------
+(defun tab-12-tone-chords (arg)
   "Toggle 'tab-12-tone-chords flag, or set/clear according to optional argument.
 Flag controls whether chord spelling also includes rational 12-tone version."
   (interactive "P")
   (setq tab-12-tone-chords (if (null arg) (not tab-12-tone-chords)
-                             (> (prefix-numeric-value arg) 0)))
-  ) ; tab-12-tone-chords
+                             (> (prefix-numeric-value arg) 0))))
 
 
 
-(defun rebind-keys (stock custom) ; -------------------------------------------
+(defun rebind-keys (stock custom)
   "Rebind to second arg all keys currently bound to first arg."
   (let ((binding-list (where-is-internal stock)))
     (while binding-list
       (define-key tab-mode-map (car binding-list) custom)
-      (setq binding-list (cdr binding-list))
-      )
-    )) ; rebind-keys
+      (setq binding-list (cdr binding-list)))))
 
 
 (defvar tab-normal-mode-map-alist
@@ -368,37 +362,36 @@ Flag controls whether chord spelling also includes rational 12-tone version."
     ("-" . tab-normal)))
 
 
-(defun tab-make-mode-map () ; -------------------------------------------------
+(defun tab-make-mode-map ()
   "Create tab mode map"
 
-                                        ; DEBUG ... hard-coded arrow-key bindings
+  ;; DEBUG ... hard-coded arrow-key bindings
   (global-unset-key	 "\M-[")
-                                        ; (global-unset-key	 "\M-O")
+  ;; (global-unset-key	 "\M-O")
 
   (setq tab-mode-map (copy-keymap (current-global-map)))
 
-                                        ; DEBUG ... hard-coded arrow-key bindings
+  ;; DEBUG ... hard-coded arrow-key bindings
   (define-key tab-mode-map "\M-[A"	'previous-line)
   (define-key tab-mode-map "\M-[B"	'next-line)
   (define-key tab-mode-map "\M-[C"	'tab-forward-char)
   (define-key tab-mode-map "\M-[D"	'tab-backward-char)
-                                        ; (define-key tab-mode-map "\M-OA"	'previous-line)
-                                        ; (define-key tab-mode-map "\M-OB"	'next-line)
-                                        ; (define-key tab-mode-map "\M-OC"	'tab-forward-char)
-                                        ; (define-key tab-mode-map "\M-OD"	'tab-backward-char)
+  ;; (define-key tab-mode-map "\M-OA"	'previous-line)
+  ;; (define-key tab-mode-map "\M-OB"	'next-line)
+  ;; (define-key tab-mode-map "\M-OC"	'tab-forward-char)
+  ;; (define-key tab-mode-map "\M-OD"	'tab-backward-char)
 
-                                        ; DEBUG ... doesn't work in 19.X in non-X mode
-                                        ; (define-key tab-mode-map [up]		'previous-line)
-                                        ; (define-key tab-mode-map [down]		'next-line)
-                                        ; (define-key tab-mode-map [right]	'tab-forward-char)
-                                        ; (define-key tab-mode-map [left]		'tab-backward-char)
+  ;; DEBUG ... doesn't work in 19.X in non-X mode
+  ;; (define-key tab-mode-map [up]		'previous-line)
+  ;; (define-key tab-mode-map [down]		'next-line)
+  ;; (define-key tab-mode-map [right]	'tab-forward-char)
+  ;; (define-key tab-mode-map [left]		'tab-backward-char)
 
   (let ((key-ndx 32))
-    (while (< key-ndx 128) (progn
-                             (define-key tab-mode-map (char-to-string key-ndx) 'tab-unused-key)
-                             (setq key-ndx (1+ key-ndx))
-                             ))
-    )
+    (while (< key-ndx 128)
+      (progn
+        (define-key tab-mode-map (char-to-string key-ndx) 'tab-unused-key)
+        (setq key-ndx (1+ key-ndx)))))
 
   (loop for (key . action) in tab-normal-mode-map-alist
         do (define-key tab-mode-map key action))
@@ -414,7 +407,7 @@ Flag controls whether chord spelling also includes rational 12-tone version."
   (rebind-keys 'copy-region-as-kill 'tab-copy-region-as-kill)
   (rebind-keys 'yank 'tab-yank)
 
-                                        ; Chord diagram style keybindings
+  ;; Chord diagram style keybindings
   (define-key tab-mode-map "\M-1"	'tab-E-open)
   (define-key tab-mode-map "\M-2"	'tab-A-open)
   (define-key tab-mode-map "\M-3"	'tab-D-open)
@@ -456,69 +449,59 @@ Flag controls whether chord spelling also includes rational 12-tone version."
   (define-key tab-mode-map "C"	'tab-D4)
   (define-key tab-mode-map "V"	'tab-G4)
   (define-key tab-mode-map "B"	'tab-B4)
-  (define-key tab-mode-map "N"	'tab-e4)
-  ) ; tab-make-mode-map
+  (define-key tab-mode-map "N"	'tab-e4))
 
 
-
-(defun tab-check-in-tab () ; --------------------------------------------------
-"Return t/nil whether cursor is in a tab staff line.  Also, force cursor
+(defun tab-check-in-tab ()
+  "Return t/nil whether cursor is in a tab staff line.  Also, force cursor
 to nearest modulo 3 note position.  Set global variable tab-current-string."
-(let ((placemark (point-marker))
-      (in-tab t)
-      (alignment (% (1+ (current-column)) 3))
-      (real-case-fold-search case-fold-search))
+  (let ((placemark (point-marker))
+        (in-tab t)
+        (alignment (% (1+ (current-column)) 3))
+        (real-case-fold-search case-fold-search))
 
-(beginning-of-line)
-(setq case-fold-search nil)
+    (beginning-of-line)
+    (setq case-fold-search nil)
 
-	(cond
-	((looking-at tab-0-string-prefix) (setq tab-current-string 0))
-	((looking-at tab-1-string-prefix) (setq tab-current-string 1))
-	((looking-at tab-2-string-prefix) (setq tab-current-string 2))
-	((looking-at tab-3-string-prefix) (setq tab-current-string 3))
-	((looking-at tab-4-string-prefix) (setq tab-current-string 4))
-	((looking-at tab-5-string-prefix) (setq tab-current-string 5))
-	(t (setq in-tab nil))
-	)
+    (cond
+     ((looking-at tab-0-string-prefix) (setq tab-current-string 0))
+     ((looking-at tab-1-string-prefix) (setq tab-current-string 1))
+     ((looking-at tab-2-string-prefix) (setq tab-current-string 2))
+     ((looking-at tab-3-string-prefix) (setq tab-current-string 3))
+     ((looking-at tab-4-string-prefix) (setq tab-current-string 4))
+     ((looking-at tab-5-string-prefix) (setq tab-current-string 5))
+     (t (setq in-tab nil)))
 
-(goto-char placemark)
-(setq case-fold-search real-case-fold-search)
+    (goto-char placemark)
+    (setq case-fold-search real-case-fold-search)
 
-	; put cursor on note position
-	(if in-tab
-		(cond
-		((< (current-column) 5) (forward-char (- 5 (current-column))))
-		((/= alignment 0) (backward-char alignment))
-		)
-	)
+    ;; put cursor on note position
+    (if in-tab
+        (cond
+         ((< (current-column) 5) (forward-char (- 5 (current-column))))
+         ((/= alignment 0) (backward-char alignment))))
 
-(setq in-tab in-tab)
-
-)) ; tab-check-in-tab
+    (setq in-tab in-tab)))
 
 
-
-(defun tab-decrement-position() ; ---------------------------------------------
-(interactive)
-	(if (tab-check-in-tab)
-		(if (> tab-position 0) (setq tab-position (1- tab-position)))
-	(insert (this-command-keys)))
-(setq tab-position-as-string (int-to-string tab-position))
-(set-buffer-modified-p (buffer-modified-p))   ; No-op, but updates mode line.
-)   ; tab-decrement-position
-
+(defun tab-decrement-position ()
+  (interactive)
+  (if (tab-check-in-tab)
+      (if (> tab-position 0) (setq tab-position (1- tab-position)))
+    (insert (this-command-keys)))
+  (setq tab-position-as-string (int-to-string tab-position))
+  ;; No-op, but updates mode line.
+  (set-buffer-modified-p (buffer-modified-p)))
 
 
-(defun tab-increment-position() ; ---------------------------------------------
-(interactive)
-	(if (tab-check-in-tab)
-	(setq tab-position (1+ tab-position))
-	(insert (this-command-keys)))
-(setq tab-position-as-string (int-to-string tab-position))
-(set-buffer-modified-p (buffer-modified-p))   ; No-op, but updates mode line.
-)   ; tab-increment-position
-
+(defun tab-increment-position ()
+  (interactive)
+  (if (tab-check-in-tab)
+      (setq tab-position (1+ tab-position))
+    (insert (this-command-keys)))
+  (setq tab-position-as-string (int-to-string tab-position))
+  ;; No-op, but updates mode line.
+  (set-buffer-modified-p (buffer-modified-p)))
 
 
 (defun tab-set-position (fret)
@@ -553,12 +536,10 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
       (forward-char count))))
 
 
-
 (defun tab-backward-char (count)
   (interactive "p")
   (if (tab-check-in-tab) (setq count (* count 3)))
   (backward-char count))
-
 
 
 (defun tab-forward-barline ()
@@ -567,7 +548,6 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 		(if (looking-at "|") (forward-char 1))
 	(re-search-forward "|\\|$")
 	(tab-check-in-tab))))
-
 
 
 (defun tab-backward-barline ()
@@ -809,7 +789,7 @@ cursor if not already in staff."
 
 
 (defun tab-delete-note (count)
-  "Delete previous note on current string (lead-mode) 
+  "Delete previous note on current string (lead-mode)
 or current note (chord-mode)."
   (interactive "p")
 
@@ -1608,13 +1588,12 @@ and return t. Otherwise, leave all alone and returns nil."
                (set chord-disclaimer disclaimer)
 
                (setq names (copy-sequence normal-names))
-               (while (< ndx (length degree-names)) (progn
-                                                      (aset names
-                                                            (aref degree-names ndx)
-                                                            (aref degree-names (1+ ndx)))
+               (while (< ndx (length degree-names))
+                 (progn (aset names
+                              (aref degree-names ndx)
+                              (aref degree-names (1+ ndx)))
 
-                                                      (setq ndx (+ ndx 2))
-                                                      ))
+                        (setq ndx (+ ndx 2))))
 
                (set chord-spelling
                     (format "%s %s %s %s %s %s  (%s to %s)"
@@ -1635,789 +1614,632 @@ and return t. Otherwise, leave all alone and returns nil."
                          (if (= note 12)
                              (aset adjusted-chord ndx 'x)
                            (aset adjusted-chord ndx note))
-                         (setq ndx (1+ ndx))
-                         ))
+                         (setq ndx (1+ ndx))))
 
                      (set chord-spelling
-                          (format "%s  %s" (eval chord-spelling) adjusted-chord))
-                     ))
+                          (format "%s  %s" (eval chord-spelling) adjusted-chord))))
 
-               (eval t)
-               ))
-    )) ; tab-chordtest
+               (eval t)))))
 
 
+(defun tab-analyze-fret ()
+  "Return numeric fret value of note cursor is on, or nil if no note"
+  (let ((digits 1)
+        (fret nil)
+        (end))
 
-(defun tab-analyze-fret () ; --------------------------------------------------
-"Return numeric fret value of note cursor is on, or nil if no note"
-(let ((digits 1) (fret nil) (end))
+    (when (looking-at "[0-9]")
+      (forward-char 1)
+      (setq end (point-marker))
+      (backward-char 2)
+      (unless (looking-at "[12]")
+        (forward-char 1)
+        (setq digits 0))
 
-  (if (looking-at "[0-9]") (progn
-  (forward-char 1)
-  (setq end (point-marker))
-  (backward-char 2)
-    (if (not (looking-at "[12]")) (progn
-    (forward-char 1)
-    (setq digits 0)
-    ))
+      (setq fret (string-to-int (buffer-substring (point-marker) end)))
+      (forward-char digits))
 
-  (setq fret (string-to-int (buffer-substring (point-marker) end)))
-  (forward-char digits)
-  ))
-
-(setq fret fret)
-
-)) ; tab-analyze-fret
+    (setq fret fret)))
 
 
-
-(defun tab-analyze-note () ; --------------------------------------------------
-"Return numeric note value of note cursor is on, or nil if no note"
-(let ((fret) (note nil))
-(setq fret (tab-analyze-fret))
-  (if fret (progn
-  (setq note (+ fret (aref tab-current-tuning tab-current-string)))
-    (if (>= note 12) (setq note (% note 12)))
-  ))
-(eval note)
-)) ; tab-analyze-note
+(defun tab-analyze-note ()
+  "Return numeric note value of note cursor is on, or nil if no note"
+  (let ((fret) (note nil))
+    (setq fret (tab-analyze-fret))
+    (when fret
+      (setq note (+ fret (aref tab-current-tuning tab-current-string)))
+      (if (>= note 12) (setq note (% note 12))))
+    (eval note)))
 
 
+(defun tab-next-chord-note ()
+  (let ((strings-checked 0) (searching t))
+
+    (while (and searching (< strings-checked 6))
+      (progn (setq temporary-goal-column (current-column))
+             (if (= tab-current-string 5)
+                 (progn (previous-line 5)
+                        (setq tab-current-string 0))
+               (next-line 1)
+               (setq tab-current-string (1+ tab-current-string)))
+
+             (if (looking-at "[0-9]") (setq searching nil))
+             (setq strings-checked (1+ strings-checked))))
+
+    (when searching (error "No notes in chord"))))
 
 
-(defun tab-next-chord-note () ; -----------------------------------------------
-(let ((strings-checked 0) (searching t))
-
-  (while (and searching (< strings-checked 6)) (progn
-  (setq temporary-goal-column (current-column))
-    (if (= tab-current-string 5) (progn
-    (previous-line 5)
-    (setq tab-current-string 0)
-    )
-    (progn ; else
-    (next-line 1)
-    (setq tab-current-string (1+ tab-current-string))
-    ))
-
-    (if (looking-at "[0-9]") (setq searching nil))
-  (setq strings-checked (1+ strings-checked))
-  ))
-
-  (if searching (error "No notes in chord"))
-
-)) ; tab-next-chord-note
-
-
-
-(defun tab-higher-string () ; -------------------------------------------------
-"Move note to next-higher string, recursively with wrap-around until blank
+(defun tab-higher-string ()
+  "Move note to next-higher string, recursively with wrap-around until blank
 string found or all six strings done."
-(interactive)
+  (interactive)
   (if (tab-check-in-tab)
-  (tab-higher-lower-string t)
-  (insert (this-command-keys)))
-) ; tab-higher-string
+      (tab-higher-lower-string t)
+    (insert (this-command-keys))))
 
 
-
-(defun tab-lower-string () ; -------------------------------------------------
-"Move note to next-lower string, recursively with wrap-around until blank
+(defun tab-lower-string ()
+  "Move note to next-lower string, recursively with wrap-around until blank
 string found or all six strings done."
-(interactive)
-	(if (tab-check-in-tab)
-	(tab-higher-lower-string nil)
-	(insert (this-command-keys)))
-) ; tab-lower-string
+  (interactive)
+  (if (tab-check-in-tab)
+      (tab-higher-lower-string nil)
+    (insert (this-command-keys))))
 
 
-
-(defun tab-higher-lower-string (higher) ; -------------------------------------
-"Internal routine to do work of 'tab-higher-string if ARG is t, else
+(defun tab-higher-lower-string (higher)
+  "Internal routine to do work of 'tab-higher-string if ARG is t, else
 'tab-lower-string'"
 
-(let ((notes-to-move t)
-      (moving-note nil)
-      (moving-fret nil)
-      (in-way-note (tab-analyze-note))
-      (in-way-fret (tab-analyze-fret))
-      (moves -1))
+  (let ((notes-to-move t)
+        (moving-note nil)
+        (moving-fret nil)
+        (in-way-note (tab-analyze-note))
+        (in-way-fret (tab-analyze-fret))
+        (moves -1))
 
-	(if (null in-way-note)
-	(error "Must be on note to move to higher/lower string"))
+    (if (null in-way-note)
+        (error "Must be on note to move to higher/lower string"))
 
-(setq tab-pending-embellishment nil)
+    (setq tab-pending-embellishment nil)
 
-	(while notes-to-move (progn
-	; erase note in way
-	(delete-char 1)
-	(delete-backward-char 2)
-	(insert "---")
-	(backward-char 1)
+    (while notes-to-move
+      ;; erase note in way
+      (progn (delete-char 1)
+             (delete-backward-char 2)
+             (insert "---")
+             (backward-char 1)
 
-	; transpose moving note (if any) to this new string
-		(if moving-note (let ((new-fret) (old-fret))
+             ;; transpose moving note (if any) to this new string
+             (when moving-note
+               (let ((new-fret)
+                     (old-fret))
 
-		(setq new-fret
-		      (- moving-note (aref tab-current-tuning
-					   tab-current-string)))
-		(setq old-fret moving-fret)
+                 (setq new-fret
+                       (- moving-note (aref tab-current-tuning
+                                            tab-current-string)))
+                 (setq old-fret moving-fret)
 
-			(if (< new-fret 0) (setq new-fret (+ new-fret 12)))
+                 (if (< new-fret 0) (setq new-fret (+ new-fret 12)))
 
-			(cond
-			((and (> new-fret old-fret) (> new-fret 12))
-				(if (> (- new-fret old-fret) 6)
-				(setq new-fret (- new-fret 12)))
-			)
-			((and (> old-fret new-fret) (<= new-fret 12))
-				(if (> (- old-fret new-fret) 6)
-				(setq new-fret (+ new-fret 12)))
-			)
-			)
+                 (cond
+                  ((and (> new-fret old-fret) (> new-fret 12))
+                   (if (> (- new-fret old-fret) 6)
+                       (setq new-fret (- new-fret 12))))
+                  ((and (> old-fret new-fret) (<= new-fret 12))
+                   (if (> (- old-fret new-fret) 6)
+                       (setq new-fret (+ new-fret 12)))))
 
-		; put transposed note on new line
-		(tab-string (int-to-string new-fret) tab-current-string)
-		))
+                 ;; put transposed note on new line
+                 (tab-string (int-to-string new-fret) tab-current-string)))
 
-	; note in the way will now move
-	(setq moving-note in-way-note)
-	(setq moving-fret in-way-fret)
+             ;; note in the way will now move
+             (setq moving-note in-way-note)
+             (setq moving-fret in-way-fret)
 
-	; set flag to exit
-	(setq notes-to-move moving-note)
+             ;; set flag to exit
+             (setq notes-to-move moving-note)
 
-	; goto next string and get note in the way (if any)
-		(if higher
-		(tab-move-string -1)
-		(tab-move-string  1))
-	(setq in-way-note (tab-analyze-note))
-	(setq in-way-fret (tab-analyze-fret))
+             ;; goto next string and get note in the way (if any)
+             (if higher
+                 (tab-move-string -1)
+               (tab-move-string  1))
+             (setq in-way-note (tab-analyze-note))
+             (setq in-way-fret (tab-analyze-fret))
 
-	; count how many notes moved
-	(setq moves (1+ moves))
-	))
+             ;; count how many notes moved
+             (setq moves (1+ moves))))
 
-; get back to note cursor on at beginning
-	(if (< moves 6)
-		(if higher
-		(tab-move-string moves)
-		(tab-move-string (- 0 moves)))
-	)
-
-)) ; tab-higher-lower-string
+    ;; get back to note cursor on at beginning
+    (if (< moves 6)
+        (if higher
+            (tab-move-string moves)
+          (tab-move-string (- 0 moves))))))
 
 
+(defun tab-move-string (strings)
+  "Move absolute value of STRINGS, down if positive, up if negative."
 
-(defun tab-move-string (strings) ;---------------------------------------------
-"Move absolute value of STRINGS, down if positive, up if negative."
+  (setq temporary-goal-column (current-column))
 
-(setq temporary-goal-column (current-column))
+  (cond
+   ((> strings 0)
+    (if (<= (+ strings tab-current-string) 5)
+        (progn (next-line strings)
+               (setq tab-current-string (+ tab-current-string strings)))
+      (setq strings (- 6 strings))
+      (previous-line strings)
+      (setq tab-current-string (- tab-current-string strings))))
 
-	(cond
-	((> strings 0)
-		(if (<= (+ strings tab-current-string) 5) (progn
-		(next-line strings)
-		(setq tab-current-string (+ tab-current-string strings))
-		)
-		(progn ; else
-		(setq strings (- 6 strings))
-		(previous-line strings)
-		(setq tab-current-string (- tab-current-string strings))
-		))
-	)
-
-	((< strings 0)
-		(if (>= (+ strings tab-current-string) 0) (progn
-		(next-line strings)
-		(setq tab-current-string (+ tab-current-string strings))
-		)
-		(progn ; else
-		(setq strings (+ 6 strings))
-		(next-line strings)
-		(setq tab-current-string (+ tab-current-string strings))
-		))
-	)
-	)
-) ; tab-move-string
+   ((< strings 0)
+    (if (>= (+ strings tab-current-string) 0)
+        (progn (next-line strings)
+               (setq tab-current-string (+ tab-current-string strings)))
+      (setq strings (+ 6 strings))
+      (next-line strings)
+      (setq tab-current-string (+ tab-current-string strings))))))
 
 
-(defun tab-goto-string (string) ; ---------------------------------------------
-"Go to STRING string, where 0<=string<=5.  Reset tab-current-string"
-(setq temporary-goal-column (current-column))
-(next-line (- string tab-current-string))
-(setq tab-current-string string)
-) ; tab-goto-string
+(defun tab-goto-string (string)
+  "Go to STRING string, where 0<=string<=5.  Reset tab-current-string"
+  (setq temporary-goal-column (current-column))
+  (next-line (- string tab-current-string))
+  (setq tab-current-string string))
 
 
-
-(defun tab-up-12 () ; ---------------------------------------------------------
-"Move current note up 12 frets"
-(interactive)
-	(if (tab-check-in-tab)
-	(let ((fret (tab-analyze-fret)))
-		(if (and (/= fret -1) (<= fret 12)) (progn
-		(setq fret (+ fret 12))
-		(tab-string (int-to-string fret) tab-current-string)
-		))
-	)
-	; else
-	(insert (this-command-keys)))
-) ; tab-up-12
+(defun tab-up-12 ()
+  "Move current note up 12 frets"
+  (interactive)
+  (if (tab-check-in-tab)
+      (let ((fret (tab-analyze-fret)))
+        (when (and (/= fret -1) (<= fret 12))
+          (setq fret (+ fret 12))
+          (tab-string (int-to-string fret) tab-current-string)))
+    ;; else
+    (insert (this-command-keys))))
 
 
-
-(defun tab-down-12 () ; -------------------------------------------------------
-"Move current note up 12 frets"
-(interactive)
-	(if (tab-check-in-tab)
-	(let ((fret (tab-analyze-fret)))
-		(if (and (/= fret -1) (>= fret 12)) (progn
-		(setq fret (- fret 12))
-		(tab-string (int-to-string fret) tab-current-string)
-		))
-	)
-	; else
-	(insert (this-command-keys)))
-) ; tab-down-12
-
+(defun tab-down-12 ()
+  "Move current note up 12 frets"
+  (interactive)
+  (if (tab-check-in-tab)
+      (let ((fret (tab-analyze-fret)))
+        (when (and (/= fret -1) (>= fret 12))
+          (setq fret (- fret 12))
+          (tab-string (int-to-string fret) tab-current-string)))
+    ;; else
+    (insert (this-command-keys))))
 
 
 (defun xfretboard ()
-"Start auxiliary X-Windows fretboard process.  Press <return> for default
+  "Start auxiliary X-Windows fretboard process.  Press <return> for default
 name, or enter pathname to xfretboard program."
-(interactive)
-(let ((program-name))
+  (interactive)
+  (let ((program-name))
 
-	(if tab-process (let ((status (process-status tab-process)))
-		(if (not (or (string= status "exit")
-			     (string= status "signal")))
-		(error "Only one external process at a time.  Currently: %s"
-		       (process-command tab-process))
-		)
-	))
+    (if tab-process
+        (let ((status (process-status tab-process)))
+          (if (not (or (string= status "exit")
+                       (string= status "signal")))
+              (error "Only one external process at a time.  Currently: %s"
+                     (process-command tab-process)))))
 
-(setq program-name
-      (read-file-name (format "Fretboard program (default %s): "
-			      fretboard-program-name)
-		      nil
-		      fretboard-program-name
-		      t))
+    (setq program-name
+          (read-file-name (format "Fretboard program (default %s): "
+                                  fretboard-program-name)
+                          nil
+                          fretboard-program-name
+                          t))
 
-(message "Starting program %s ...")
-(setq tab-process (start-process program-name (current-buffer) program-name))
-(set-process-filter tab-process 'tab-read-process)
-(message "Graphical interface window should appear momentarily")
-
-)) ; xfretboard
+    (message "Starting program %s ...")
+    (setq tab-process (start-process program-name (current-buffer) program-name))
+    (set-process-filter tab-process 'tab-read-process)
+    (message "Graphical interface window should appear momentarily")))
 
 
 (defun tab-read-process (process string)
-"Read input from external program, and process as tab-mode commands."
-(let ((old-buffer (current-buffer))
-      (string-pos 0)
-      (string-length (1-(length string)))
-      (read-result))
+  "Read input from external program, and process as tab-mode commands."
+  (let ((old-buffer (current-buffer))
+        (string-pos 0)
+        (string-length (1-(length string)))
+        (read-result))
 
-; Having this forces each buffer to have its own separate X-Windows prog. 
-;	(if (not (equal process tab-process))
-;	(error "Input from %s, not tab-process (%s)" process tab-process))
+    ;; Having this forces each buffer to have its own separate X-Windows prog.
+    ;;	(if (not (equal process tab-process))
+    ;;	(error "Input from %s, not tab-process (%s)" process tab-process))
 
-	(if (not (equal major-mode 'tab-mode)) (progn
-	(display-buffer (process-buffer process))
-	(set-buffer (process-buffer process))
-	))
+    (unless (equal major-mode 'tab-mode)
+      (display-buffer (process-buffer process))
+      (set-buffer (process-buffer process)))
 
-	(while (< string-pos string-length) (progn
-	(setq read-result (read-from-string string string-pos))
-	(eval (car read-result))
-	(setq string-pos (cdr read-result))
-	))
+    (while (< string-pos string-length)
+      (progn
+        (setq read-result (read-from-string string string-pos))
+        (eval (car read-result))
+        (setq string-pos (cdr read-result))))
 
-(set-buffer old-buffer)
-))
+    (set-buffer old-buffer)))
 
 
-
-(defun tab-unused-key () ; ----------------------------------------------------
+(defun tab-unused-key ()
 "Ignore keypress if on tab staff; insert normally otherwise"
 (interactive)
-	(if (not (tab-check-in-tab)) (insert (this-command-keys)))
-)
+	(if (not (tab-check-in-tab)) (insert (this-command-keys))))
 
 
-
-(defun tab-embellishment (special-character) ; --------------------------------
-"Mark current note with ARG character"
-	(if (tab-check-in-tab)
-		(if (looking-at "-") (progn
-		(setq tab-pending-embellishment special-character)
-		(set-buffer-modified-p (buffer-modified-p))
-		)
-		(progn ; else
-		(backward-char 1)
-			(if (looking-at "[12]") (backward-char 1))
-		(delete-char 1)
-		(insert special-character)
-		(forward-char 1)
-			(if (not (looking-at "[0-9]")) (backward-char 1))
-		))
-	; else
-	(insert (this-command-keys))
-	)
-) ; tab-embellishment
+(defun tab-embellishment (special-character)
+  "Mark current note with ARG character"
+  (if (tab-check-in-tab)
+      (if (looking-at "-")
+          (progn (setq tab-pending-embellishment special-character)
+                 (set-buffer-modified-p (buffer-modified-p)))
+        (backward-char 1)
+        (if (looking-at "[12]") (backward-char 1))
+        (delete-char 1)
+        (insert special-character)
+        (forward-char 1)
+        (if (not (looking-at "[0-9]")) (backward-char 1)))
+    (insert (this-command-keys))))
 
 
+(defun tab-hammer ()
+  (interactive)
+  (tab-embellishment "h"))
 
-(defun tab-hammer () ; --------------------------------------------------------
+(defun tab-pull ()
+  (interactive)
+  (tab-embellishment "p"))
+
+(defun tab-bend ()
+  (interactive)
+  (tab-embellishment "b"))
+
+(defun tab-release ()
+  (interactive)
+  (tab-embellishment "r"))
+
+(defun tab-slide-up ()
+  (interactive)
+  (tab-embellishment "/"))
+
+(defun tab-slide-down ()
+  (interactive)
+  (tab-embellishment "\\"))
+
+(defun tab-vibrato ()
+  (interactive)
+  (tab-embellishment "~"))
+
+(defun tab-ghost ()
+  (interactive)
+  (tab-embellishment "("))
+
+(defun tab-normal ()
+  (interactive)
+  (tab-embellishment "-"))
+
+(defun tab-muffled ()
+  (interactive)
+  (tab-embellishment "X"))
+
+
+(defun tab-string (symbol string)
+  "Place first arg note on second arg string."
+  (setq temporary-goal-column (current-column))
+  (previous-line (- tab-current-string string))
+  (delete-char 1)
+  (backward-char 1)
+  (if (looking-at "[-12]")
+      (delete-char 1)
+    ;; else
+    (delete-backward-char 1)
+    (forward-char 1))
+
+  (when (< (length symbol) 2)
+    (backward-char 1)
+    (insert "-")
+    (forward-char 1))
+
+  (insert symbol)
+
+  (when tab-pending-embellishment
+    (backward-char (length symbol))
+    (delete-backward-char 1)
+    (insert tab-pending-embellishment)
+    (forward-char (length symbol))
+    (setq tab-pending-embellishment nil)
+    (set-buffer-modified-p (buffer-modified-p)))
+
+  (if (bound-and-true-p chord-mode) (backward-char 1))
+  (if (bound-and-true-p lead-mode) (forward-char 2))
+
+  (setq tab-current-string string))
+
+
+(defun tab-E (symbol)
+(tab-string symbol 5))
+
+(defun tab-A (symbol)
+(tab-string symbol 4))
+
+(defun tab-D (symbol)
+(tab-string symbol 3))
+
+(defun tab-G (symbol)
+(tab-string symbol 2))
+
+(defun tab-B (symbol)
+(tab-string symbol 1))
+
+(defun tab-e (symbol)
+(tab-string symbol 0))
+
+
+(defun tab-E-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-E (int-to-string fret))
+    (insert (this-command-keys))))
+
+(defun tab-A-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-A (int-to-string fret))
+    (insert (this-command-keys))))
+
+(defun tab-D-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-D (int-to-string fret))
+    (insert (this-command-keys))))
+
+(defun tab-G-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-G (int-to-string fret))
+    (insert (this-command-keys))))
+
+(defun tab-B-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-B (int-to-string fret))
+    (insert (this-command-keys))))
+
+(defun tab-e-fret (fret)
+  (if (tab-check-in-tab)
+      (tab-e (int-to-string fret))
+    (insert (this-command-keys))))
+
+
+(defun tab-E-open ()
 (interactive)
-(tab-embellishment "h")
-) ; tab-hammer
+(tab-E-fret 0))
 
-(defun tab-pull () ; ----------------------------------------------------------
+(defun tab-A-open ()
 (interactive)
-(tab-embellishment "p")
-) ; tab-pull
+(tab-A-fret 0))
 
-(defun tab-bend () ; ----------------------------------------------------------
+(defun tab-D-open ()
 (interactive)
-(tab-embellishment "b")
-) ; tab-bend
+(tab-D-fret 0))
 
-(defun tab-release () ; -------------------------------------------------------
+(defun tab-G-open ()
 (interactive)
-(tab-embellishment "r")
-) ; tab-release
+(tab-G-fret 0))
 
-(defun tab-slide-up () ; ------------------------------------------------------
+(defun tab-B-open ()
 (interactive)
-(tab-embellishment "/")
-) ; tab-slide-up
+(tab-B-fret 0))
 
-(defun tab-slide-down () ; ----------------------------------------------------
+(defun tab-e-open ()
 (interactive)
-(tab-embellishment "\\")
-) ; tab-slide-down
-
-(defun tab-vibrato () ; -------------------------------------------------------
-(interactive)
-(tab-embellishment "~")
-) ; tab-vibrato
-
-(defun tab-ghost () ; ---------------------------------------------------------
-(interactive)
-(tab-embellishment "(")
-) ; tab-ghost
-
-(defun tab-normal () ; -------------------------------------------------------
-(interactive)
-(tab-embellishment "-")
-) ; tab-normal
-
-(defun tab-muffled () ; -------------------------------------------------------
-(interactive)
-(tab-embellishment "X")
-) ; tab-muffled
+(tab-e-fret 0))
 
 
-
-(defun tab-string (symbol string) ; -------------------------------------------
-"Place first arg note on second arg string."
-(setq temporary-goal-column (current-column))
-(previous-line (- tab-current-string string))
-(delete-char 1)
-(backward-char 1)
-	(if (looking-at "[-12]")
-	(delete-char 1)
-	; else
-	(delete-backward-char 1)
-	(forward-char 1)
-	)
-
-	(if (< (length symbol) 2) (progn
-	(backward-char 1)
-	(insert "-")
-	(forward-char 1)
-	))
-
-(insert symbol)
-
-	(if tab-pending-embellishment (progn
-	(backward-char (length symbol))
-	(delete-backward-char 1)
-	(insert tab-pending-embellishment)
-	(forward-char (length symbol))
-	(setq tab-pending-embellishment nil)
-	(set-buffer-modified-p (buffer-modified-p))
-	))
-
-	(if (bound-and-true-p chord-mode) (backward-char 1))
-(if (bound-and-true-p lead-mode) (forward-char 2))
-
-(setq tab-current-string string)
-) ; tab-string
-
-
-
-(defun tab-E (symbol) ; -------------------------------------------------------
-(tab-string symbol 5)
-)
-
-(defun tab-A (symbol) ; -------------------------------------------------------
-(tab-string symbol 4)
-)
-
-(defun tab-D (symbol) ; -------------------------------------------------------
-(tab-string symbol 3)
-)
-
-(defun tab-G (symbol) ; -------------------------------------------------------
-(tab-string symbol 2)
-)
-
-(defun tab-B (symbol) ; -------------------------------------------------------
-(tab-string symbol 1)
-)
-
-(defun tab-e (symbol) ; -------------------------------------------------------
-(tab-string symbol 0)
-)
-
-
-
-(defun tab-E-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-E (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-(defun tab-A-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-A (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-(defun tab-D-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-D (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-(defun tab-G-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-G (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-(defun tab-B-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-B (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-(defun tab-e-fret (fret) ; ---------------------------------------------------
-	(if (tab-check-in-tab)
-	(tab-e (int-to-string fret))
-	(insert (this-command-keys)))
-)
-
-
-
-(defun tab-E-open () ; --------------------------------------------------------
-(interactive)
-(tab-E-fret 0)
-)
-
-(defun tab-A-open () ; --------------------------------------------------------
-(interactive)
-(tab-A-fret 0)
-)
-
-(defun tab-D-open () ; --------------------------------------------------------
-(interactive)
-(tab-D-fret 0)
-)
-
-(defun tab-G-open () ; --------------------------------------------------------
-(interactive)
-(tab-G-fret 0)
-)
-
-(defun tab-B-open () ; --------------------------------------------------------
-(interactive)
-(tab-B-fret 0)
-)
-
-(defun tab-e-open () ; --------------------------------------------------------
-(interactive)
-(tab-e-fret 0)
-)
-
-
-
-(defun tab-E-1 () ; -----------------------------------------------------------
+(defun tab-E-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-E-fret (- tab-position 1))
-	(tab-E-fret tab-position))
-)
+	(tab-E-fret tab-position)))
 
-(defun tab-A-1 () ; -----------------------------------------------------------
+(defun tab-A-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-A-fret (- tab-position 1))
-	(tab-A-fret tab-position))
-)
+	(tab-A-fret tab-position)))
 
-(defun tab-D-1 () ; -----------------------------------------------------------
+(defun tab-D-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-D-fret (- tab-position 1))
-	(tab-D-fret tab-position))
-)
+	(tab-D-fret tab-position)))
 
-(defun tab-G-1 () ; -----------------------------------------------------------
+(defun tab-G-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-G-fret (- tab-position 1))
-	(tab-G-fret tab-position))
-)
+	(tab-G-fret tab-position)))
 
-(defun tab-B-1 () ; -----------------------------------------------------------
+(defun tab-B-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-B-fret (- tab-position 1))
-	(tab-B-fret tab-position))
-)
+	(tab-B-fret tab-position)))
 
-(defun tab-e-1 () ; -----------------------------------------------------------
+(defun tab-e-1 ()
 (interactive)
 	(if (> tab-position 0)
 	(tab-e-fret (- tab-position 1))
-	(tab-e-fret tab-position))
-)
+	(tab-e-fret tab-position)))
 
 
+(defun tab-E0 ()
+  (interactive)
+  (tab-E-fret tab-position))
 
-(defun tab-E0 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret tab-position)
-)
+(defun tab-A0 ()
+  (interactive)
+  (tab-A-fret tab-position))
 
-(defun tab-A0 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret tab-position)
-)
+(defun tab-D0 ()
+  (interactive)
+  (tab-D-fret tab-position))
 
-(defun tab-D0 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret tab-position)
-)
+(defun tab-G0 ()
+  (interactive)
+  (tab-G-fret tab-position))
 
-(defun tab-G0 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret tab-position)
-)
+(defun tab-B0 ()
+  (interactive)
+  (tab-B-fret tab-position))
 
-(defun tab-B0 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret tab-position)
-)
-
-(defun tab-e0 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret tab-position)
-)
+(defun tab-e0 ()
+  (interactive)
+  (tab-e-fret tab-position))
 
 
+(defun tab-E1 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 1)))
 
-(defun tab-E1 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 1))
-)
+(defun tab-A1 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 1)))
 
-(defun tab-A1 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 1))
-)
+(defun tab-D1 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 1)))
 
-(defun tab-D1 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 1))
-)
+(defun tab-G1 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 1)))
 
-(defun tab-G1 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 1))
-)
+(defun tab-B1 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 1)))
 
-(defun tab-B1 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 1))
-)
-
-(defun tab-e1 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 1))
-)
+(defun tab-e1 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 1)))
 
 
+(defun tab-E2 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 2)))
 
-(defun tab-E2 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 2))
-)
+(defun tab-A2 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 2)))
 
-(defun tab-A2 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 2))
-)
+(defun tab-D2 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 2)))
 
-(defun tab-D2 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 2))
-)
+(defun tab-G2 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 2)))
 
-(defun tab-G2 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 2))
-)
+(defun tab-B2 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 2)))
 
-(defun tab-B2 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 2))
-)
-
-(defun tab-e2 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 2))
-)
+(defun tab-e2 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 2)))
 
 
+(defun tab-E3 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 3)))
 
-(defun tab-E3 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 3))
-)
+(defun tab-A3 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 3)))
 
-(defun tab-A3 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 3))
-)
+(defun tab-D3 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 3)))
 
-(defun tab-D3 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 3))
-)
+(defun tab-G3 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 3)))
 
-(defun tab-G3 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 3))
-)
+(defun tab-B3 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 3)))
 
-(defun tab-B3 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 3))
-)
-
-(defun tab-e3 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 3))
-)
+(defun tab-e3 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 3)))
 
 
+(defun tab-E4 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 4)))
 
-(defun tab-E4 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 4))
-)
+(defun tab-A4 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 4)))
 
-(defun tab-A4 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 4))
-)
+(defun tab-D4 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 4)))
 
-(defun tab-D4 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 4))
-)
+(defun tab-G4 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 4)))
 
-(defun tab-G4 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 4))
-)
+(defun tab-B4 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 4)))
 
-(defun tab-B4 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 4))
-)
-
-(defun tab-e4 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 4))
-)
+(defun tab-e4 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 4)))
 
 
+(defun tab-E5 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 5)))
 
-(defun tab-E5 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 5))
-)
+(defun tab-A5 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 5)))
 
-(defun tab-A5 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 5))
-)
+(defun tab-D5 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 5)))
 
-(defun tab-D5 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 5))
-)
+(defun tab-G5 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 5)))
 
-(defun tab-G5 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 5))
-)
+(defun tab-B5 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 5)))
 
-(defun tab-B5 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 5))
-)
-
-(defun tab-e5 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 5))
-)
+(defun tab-e5 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 5)))
 
 
+(defun tab-E6 ()
+  (interactive)
+  (tab-E-fret (+ tab-position 6)))
 
-(defun tab-E6 () ; ------------------------------------------------------------
-(interactive)
-(tab-E-fret (+ tab-position 6))
-)
+(defun tab-A6 ()
+  (interactive)
+  (tab-A-fret (+ tab-position 6)))
 
-(defun tab-A6 () ; ------------------------------------------------------------
-(interactive)
-(tab-A-fret (+ tab-position 6))
-)
+(defun tab-D6 ()
+  (interactive)
+  (tab-D-fret (+ tab-position 6)))
 
-(defun tab-D6 () ; ------------------------------------------------------------
-(interactive)
-(tab-D-fret (+ tab-position 6))
-)
+(defun tab-G6 ()
+  (interactive)
+  (tab-G-fret (+ tab-position 6)))
 
-(defun tab-G6 () ; ------------------------------------------------------------
-(interactive)
-(tab-G-fret (+ tab-position 6))
-)
+(defun tab-B6 ()
+  (interactive)
+  (tab-B-fret (+ tab-position 6)))
 
-(defun tab-B6 () ; ------------------------------------------------------------
-(interactive)
-(tab-B-fret (+ tab-position 6))
-)
-
-(defun tab-e6 () ; ------------------------------------------------------------
-(interactive)
-(tab-e-fret (+ tab-position 6))
-)
+(defun tab-e6 ()
+  (interactive)
+  (tab-e-fret (+ tab-position 6)))
 
 (provide 'tablature-mode)
