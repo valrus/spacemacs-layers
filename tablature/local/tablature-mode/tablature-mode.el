@@ -216,16 +216,17 @@ or
   \\[tab-yank]	insert previously killed tablature
 
   \\[tab-copy-retune]	copy tab staff, transposing to current tuning
-  \\[tab-learn-tuning]	memorize new tuning (cursor first string)
+  \\[tab-learn-tuning] memorize new tuning (cursor first string)
+  \\[tab-retune-string] return current string and learn new tuning
 
   \\[tab-analyze-chord]	analyze chord (cursor on root note)
   \\[tab-label-chord]	insert previously analyzed chord name
   \\[tab-note-name]	change whether chords are A# vs. Bb, etc.
 
   \\[tab-higher-string]	move note to next higher string
-  \\[tab-lower-string]	move note to next higher string
+  \\[tab-lower-string] move note to next higher string
 
-  \\[tab-up-12]	move note up   12 frets
+  \\[tab-up-12]	move note up 12 frets
   \\[tab-down-12]	move note down 12 frets
 
 Tablature mode recognizes when the cursor is on a tab staff (and draws
@@ -970,7 +971,6 @@ Check that both dot and mark are inside same staff of tab."
         (previous-line (- 5 tab-current-string))))))
 
 
-
 (defun tab-kill-region ()
   "Kill region of tab to rectangle kill ring"
   (interactive)
@@ -1029,11 +1029,10 @@ Check that both dot and mark are inside same staff of tab."
         (goto-char begin)
 
         (while (<= (point-marker) end)
-          (progn
-            (tab-transpose-chord fret-array)
-            (if (< (current-column) (- (line-end-position) 3))
-                (forward-char 3)
-              (end-of-line))))
+          (progn (tab-transpose-chord fret-array)
+                 (if (< (current-column) (- (line-end-position) 3))
+                     (forward-char 3)
+                   (end-of-line))))
 
         (setq tab-current-string 0)
         (message "Finished transposing region by %d frets." frets))
@@ -1235,30 +1234,6 @@ new tuning.  Each line must be unique."
       (forward-line 1))))
 
 
-(defun tab-set-tuning (string)
-  "Given 18-character string (six 3-char tunings) set tuning to it."
-  (let ((ndx 0)
-        (begin 0)
-        (end 3)
-        (one-string))
-
-    (unless (tab-check-in-tab) (tab-make-staff))
-    (next-line (- 5 tab-current-string))
-
-    (while (< ndx 6)
-      (progn (beginning-of-line)
-             (delete-char 3)
-             (insert (substring string begin end))
-             (setq begin end)
-             (setq end (+ end 3))
-             (if (< ndx 5) (previous-line 1))
-             (setq ndx (1+ ndx))))
-
-    (tab-learn-tuning)
-    (tab-check-in-tab)))
-
-
-
 (defun tab-note-name ()
   "Change names for printing chords (e.g. A# vs. Bb). First enter current name
 of note, then new name."
@@ -1297,14 +1272,12 @@ of note, then new name."
     (previous-line (1+ tab-current-string))
 
     ;; insert spaces if necessary
-    (if (< (current-column) chord-column)
-        (progn
-          ;; insert spaces
-          (indent-to-column chord-column)
-          (setq name-begin (point-marker))
-          (beginning-of-line)
-          (untabify (point-marker) name-begin)
-          (move-to-column chord-column)))))
+    (when (< (current-column) chord-column)
+      (indent-to-column chord-column)
+      (setq name-begin (point-marker))
+      (beginning-of-line)
+      (untabify (point-marker) name-begin)
+      (move-to-column chord-column))))
 
 
 (defun tab-delete-chord-label ()
