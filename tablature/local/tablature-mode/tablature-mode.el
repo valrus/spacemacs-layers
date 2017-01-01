@@ -1117,30 +1117,33 @@ current tuning."
 (defun tab-analyze-tuning (tuning)
   "Fill six-element array TUNING with numeric values representing letter
 notes at beginning of current plus next 5 screen lines."
-  (let ((placemark (point-marker)) (ndx 0) (numeric))
+  (when (tab-check-in-tab)
+    (save-excursion
+      (tab-move-staff-start)
+      (let ((ndx 0)
+            (numeric))
 
-    (while (< ndx 6)
-      (progn (beginning-of-line)
-             (cond
-              ((looking-at "[Ee]") (setq numeric  0))
-              ((looking-at "[Ff]") (setq numeric  1))
-              ((looking-at "[Gg]") (setq numeric  3))
-              ((looking-at "[Aa]") (setq numeric  5))
-              ((looking-at "[Bb]") (setq numeric  7))
-              ((looking-at "[Cc]") (setq numeric  8))
-              ((looking-at "[Dd]") (setq numeric 10))
-              (t		   (setq numeric  0)))
-             (forward-char 1)
-             (if (looking-at "#") (setq numeric (1+ numeric)))
-             (if (looking-at "b") (setq numeric (1- numeric)))
+        (while (< ndx 6)
+          (progn
+            (beginning-of-line)
+            (cond
+             ((looking-at "[Ee]") (setq numeric  0))
+             ((looking-at "[Ff]") (setq numeric  1))
+             ((looking-at "[Gg]") (setq numeric  3))
+             ((looking-at "[Aa]") (setq numeric  5))
+             ((looking-at "[Bb]") (setq numeric  7))
+             ((looking-at "[Cc]") (setq numeric  8))
+             ((looking-at "[Dd]") (setq numeric 10))
+             (t		   (setq numeric  0)))
+            (forward-char 1)
+            (if (looking-at "#") (setq numeric (1+ numeric)))
+            (if (looking-at "b") (setq numeric (1- numeric)))
 
-             (if (< numeric 0) (setq numeric (+ 12 numeric)))
-             (aset tuning ndx numeric)
+            (if (< numeric 0) (setq numeric (+ 12 numeric)))
+            (aset tuning ndx numeric)
 
-             (forward-line 1)
-             (setq ndx (1+ ndx))))
-
-    (goto-char placemark)))
+            (forward-line 1)
+            (setq ndx (1+ ndx))))))))
 
 
 (defun tab-transpose-chord (transpositions)
@@ -1217,7 +1220,8 @@ new tuning.  Each line must be unique."
         (error "New tuning isn't a valid note name!"))
       (tab-relabel-all-strings tab-current-string new-tuning)
       (when (tab-check-in-tab)
-        (tab-learn-string (tab-get-string-prefix-symbol tab-current-string))))))
+        (tab-learn-string (tab-get-string-prefix-symbol tab-current-string))
+        (tab-analyze-tuning tab-current-tuning)))))
 
 
 (defun tab-learn-string (string)
