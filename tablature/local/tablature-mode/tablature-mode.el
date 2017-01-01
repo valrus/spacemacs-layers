@@ -95,11 +95,6 @@ to normal 1st, 3rd, 5th, b7th, etc.  Can take value `t' for true, or
 `nil' for false."
   :type 'boolean)
 
-(defcustom fretboard-program-name
-  (concat (getenv "HOME") "/bin/xfretboard")
-  "*Default path name of auxiliary X-Windows fretboard program."
-  :type 'file)
-
 (defcustom default-tablature-width
   80
   "Default width of a tablature line."
@@ -143,10 +138,6 @@ Commands:
 	""
 "Chord analyzed by `\\[tab-analyze-chord]' (tab-analyze-chord), available
 for automatic insertion into tab by `\\[tab-label-chord]' (tab-label-chord)")
-
-(defvar tab-process
-	nil
-"External process which feeds commands to tab-mode.")
 
 (defvar tab-string-regexp
   "^[a-gA-G][-b#]\|")
@@ -220,8 +211,6 @@ or
 
   +	transpose notes in region by N frets (tab-transpose)
 
-  \\[xfretboard]	start xfretboard (optional graphical interface)
-
   \\[tab-copy-region-as-kill]	memorize tab between dot and mark (incl).
   \\[tab-kill-region]	as above, but also delete
   \\[tab-yank]	insert previously killed tablature
@@ -261,7 +250,6 @@ Full list of commands:
   (make-local-variable 'tab-last-chord)
   (make-local-variable 'tab-current-tuning)
   (make-local-variable 'tab-12-tone-chords)
-  (make-local-variable 'tab-process)
   (make-local-variable 'tab-0-string-prefix)
   (make-local-variable 'tab-1-string-prefix)
   (make-local-variable 'tab-2-string-prefix)
@@ -297,14 +285,12 @@ Use `\\[describe-function] tab-mode' to see documentation for tab-mode."
   (set-buffer-modified-p (buffer-modified-p)))
 
 
-
 (defun tab-12-tone-chords (arg)
   "Toggle 'tab-12-tone-chords flag, or set/clear according to optional argument.
 Flag controls whether chord spelling also includes rational 12-tone version."
   (interactive "P")
   (setq tab-12-tone-chords (if (null arg) (not tab-12-tone-chords)
                              (> (prefix-numeric-value arg) 0))))
-
 
 
 (defun rebind-keys (stock custom)
@@ -834,12 +820,11 @@ or current note (chord-mode)."
   "Delete note (if any) that cursor is on, regardless of minor mode"
   (interactive)
 
-  (if (tab-check-in-tab)
-      (progn
-        (forward-char 1)
-        (delete-backward-char 3)
-        (insert "---")
-        (backward-char 1))))
+  (when (tab-check-in-tab)
+    (forward-char 1)
+    (delete-backward-char 3)
+    (insert "---")
+    (backward-char 1)))
 
 
 (defun tab-insert (count)
@@ -865,9 +850,7 @@ or current note (chord-mode)."
         (forward-char 2)
         )
     ;; else
-    (insert-char ?\t 1)
-    )
-  )
+    (insert-char ?\t 1)))
 
 
 (defun tab-begin-end-region (caller-begin caller-end)
@@ -1865,56 +1848,6 @@ string found or all six strings done."
           (tab-string (int-to-string fret) tab-current-string)))
     ;; else
     (insert (this-command-keys))))
-
-
-(defun xfretboard ()
-  "Start auxiliary X-Windows fretboard process.  Press <return> for default
-name, or enter pathname to xfretboard program."
-  (interactive)
-  (let ((program-name))
-
-    (if tab-process
-        (let ((status (process-status tab-process)))
-          (if (not (or (string= status "exit")
-                       (string= status "signal")))
-              (error "Only one external process at a time.  Currently: %s"
-                     (process-command tab-process)))))
-
-    (setq program-name
-          (read-file-name (format "Fretboard program (default %s): "
-                                  fretboard-program-name)
-                          nil
-                          fretboard-program-name
-                          t))
-
-    (message "Starting program %s ...")
-    (setq tab-process (start-process program-name (current-buffer) program-name))
-    (set-process-filter tab-process 'tab-read-process)
-    (message "Graphical interface window should appear momentarily")))
-
-
-(defun tab-read-process (process string)
-  "Read input from external program, and process as tab-mode commands."
-  (let ((old-buffer (current-buffer))
-        (string-pos 0)
-        (string-length (1-(length string)))
-        (read-result))
-
-    ;; Having this forces each buffer to have its own separate X-Windows prog.
-    ;;	(if (not (equal process tab-process))
-    ;;	(error "Input from %s, not tab-process (%s)" process tab-process))
-
-    (unless (equal major-mode 'tab-mode)
-      (display-buffer (process-buffer process))
-      (set-buffer (process-buffer process)))
-
-    (while (< string-pos string-length)
-      (progn
-        (setq read-result (read-from-string string string-pos))
-        (eval (car read-result))
-        (setq string-pos (cdr read-result))))
-
-    (set-buffer old-buffer)))
 
 
 (defun tab-unused-key ()
