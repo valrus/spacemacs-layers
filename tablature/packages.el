@@ -74,12 +74,12 @@ Each entry is either:
         "cd" 'tab-delete-chord-label
         "cg" 'tab-goto-chord-label
         "ll" 'tab-toggle-lyric-line
-        )
+        "tr" 'tab-retune-string)
 
       (dolist (x '(("mc" . "chord")
-                   ("ml" . "lyrics")))
-        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x)))
-      )
+                   ("ml" . "lyrics")
+                   ("mt" . "tuning"))
+        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x))))
 
     :config
     (progn
@@ -128,17 +128,13 @@ Each entry is either:
 
       (evil-define-key 'normal tab-mode-map "x" 'tab-delete-current-note)
       (evil-define-key 'normal tab-mode-map "X" 'tab-delete-chord-forward)
+
       (evil-define-key 'normal tab-mode-map "dc" 'tab-delete-chord-forward)
 
       (evil-define-key 'normal tab-mode-map "|" 'tab-barline-in-place)
 
       ; Visual mode bindings
-      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)
-
-      ;; TODO: C-h	delete previous (lead-mode) or current (chord-mode) note
-      ;; TODO: C-?	delete previous note/chord
-      )
-    ))
+      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)))))
 
 
 (defun tablature/setup-normal-mode-line ()
