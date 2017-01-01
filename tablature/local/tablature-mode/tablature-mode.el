@@ -1833,16 +1833,25 @@ string found or all six strings done."
 	(if (not (tab-check-in-tab)) (insert (this-command-keys))))
 
 
+(defun tab-toggle-embellishment-char (prev-char new-char)
+  (if (string= prev-char new-char) "-" new-char))
+
+
 (defun tab-embellishment (special-character)
   "Mark current note with ARG character"
   (if (tab-check-in-tab)
       (if (looking-at "-")
-          (progn (setq tab-pending-embellishment special-character)
+          (progn (setq tab-pending-embellishment
+                       (tab-toggle-embellishment-char tab-pending-embellishment
+                                                      special-character))
                  (set-buffer-modified-p (buffer-modified-p)))
         (backward-char 1)
         (if (looking-at "[12]") (backward-char 1))
-        (delete-char 1)
-        (insert special-character)
+        (let ((new-embellishment (tab-toggle-embellishment-char
+                                  (string (char-after))
+                                  special-character)))
+          (delete-char 1)
+          (insert new-embellishment))
         (forward-char 1)
         (if (not (looking-at "[0-9]")) (backward-char 1)))
     (insert (this-command-keys))))
