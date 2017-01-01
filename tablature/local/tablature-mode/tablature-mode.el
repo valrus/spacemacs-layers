@@ -149,8 +149,7 @@ for automatic insertion into tab by `\\[tab-label-chord]' (tab-label-chord)")
 "External process which feeds commands to tab-mode.")
 
 (defvar tab-string-regexp
-  "^.[-b#]\|")
-
+  "^[a-gA-G][-b#]\|")
 
 
 (define-derived-mode tab-mode fundamental-mode "Tablature"
@@ -447,7 +446,7 @@ Flag controls whether chord spelling also includes rational 12-tone version."
 
 (defun tab-check-in-tab ()
   "Return t/nil whether cursor is in a tab staff line.  Also, force cursor
-to nearest modulo 3 note position.  Set global variable tab-current-string."
+to nearest modulo 3 note position. Set global variable tab-current-string."
   (let ((in-tab t)
         (strings-above 0)
         (real-case-fold-search case-fold-search))
@@ -512,8 +511,7 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
         (if (< tab-position 0) (setq tab-position 0))
         (setq tab-position-as-string (int-to-string tab-position))
-        (set-buffer-modified-p (buffer-modified-p))
-        )
+        (set-buffer-modified-p (buffer-modified-p)))
     ;; else
     (insert (this-command-keys))))
 
@@ -525,8 +523,7 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
     (if (tab-check-in-tab)
         (progn
           (if (< original-column 5) (backward-char 3))
-          (forward-char (* count 3))
-          )
+          (forward-char (* count 3)))
       ;; else
       (forward-char count))))
 
@@ -558,7 +555,6 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 (defun tab-navigate-string (count)
   (let ((column (current-column))
-        (search-tab-line "^.[-b#]\|")
         (real-case-fold-search case-fold-search)
         (search-fun (choose-re-search count))
         (loop-count (abs count)))
@@ -567,10 +563,8 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
     (while
         (> loop-count 0)
       (progn
-        (funcall search-fun search-tab-line nil t)
-        (setq loop-count (1- loop-count))
-        )
-      )
+        (funcall search-fun tab-string-regexp nil t)
+        (setq loop-count (1- loop-count))))
     (beginning-of-line)
     (forward-char column)
     (tab-check-in-tab)
@@ -588,9 +582,10 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
 
 
 (defun tab-restore-staff-location (string column)
-  (move-to-column column)
-  (next-line string)
-  (tab-check-in-tab))
+  (when (tab-check-in-tab)
+    (move-to-column column)
+    (next-line string)
+    (tab-check-in-tab)))
 
 
 (defun tab-integer-sign (n)
@@ -601,11 +596,16 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
       -1)))
 
 
-(defun tab-move-outside-staff (direction)
-  (when (tab-check-in-tab)
+(defun tab-move-beyond-staff (direction)
+  "Move to the line above or below the current staff, depending on the sign
+of direction. Return t if there is no such line (or we're not in tab),
+nil otherwise."
+  (if (not (tab-check-in-tab))
+      t
     (if (< direction 0)
-        (next-line (- (+ tab-current-string 1)))
-      (next-line (- 6 tab-current-string)))))
+        (forward-line (- (1+ tab-current-string)))
+      (forward-line (- 6 tab-current-string)))
+    (tab-check-in-tab)))
 
 
 (defun tab-move-staff-start ()
@@ -621,53 +621,39 @@ to nearest modulo 3 note position.  Set global variable tab-current-string."
         (search-fun (choose-re-search direction)))
     (when (tab-check-in-tab)
       ;; go to the line after this staff, if possible
-      (when (> (tab-move-outside-staff direction) 0)
+      (when (tab-move-beyond-staff direction)
         ;; no lines beyond this staff, bail
         (setq can-move nil)
         (goto-char tmp-saved-point)))
+    ;; go to the "next" (up or down depending on direction) tab line
     (when can-move
-      (unless (funcall search-fun tab-string-regexp nil t)
-        (goto-char tmp-saved-point)))))
-
-
-(defun move-staff-and-restore-location (count string column)
-  (let ((search-top (concat "^" tab-0-string-prefix))
-        (real-case-fold-search case-fold-search)
-        (search-fun (choose-re-search count))
-        (loop-count (abs count))
-        (moves 0))
-
-    (setq case-fold-search nil)
-
-    (while (> loop-count 0)
-      (progn
-        (if (funcall search-fun search-top nil t) (setq moves (1+ moves)))
-        (setq loop-count (1- loop-count))))
-
-    (tab-restore-staff-location string column)
-
-    (setq case-fold-search real-case-fold-search)
-    (if (> moves 0) moves nil)))
+      (if (funcall search-fun tab-string-regexp nil t)
+          (tab-move-staff-start)
+        (goto-char tmp-saved-point)
+        (setq can-move nil)))
+    can-move))
 
 
 (defun tab-up-staff (count)
   (interactive "p")
-  (let ((column (current-column))
+  (let ((starting-column (current-column))
         (starting-string tab-current-string))
 
-    (if (tab-check-in-tab) (previous-line (1+ tab-current-string)))
+    (cl-loop repeat count
+             do (tab-move-staff -1))
 
-    (move-staff-and-restore-location (- count) starting-string column)))
+    (tab-restore-staff-location starting-string starting-column)))
 
 
 (defun tab-down-staff (count)
   (interactive "p")
-  (let ((column (current-column))
+  (let ((starting-column (current-column))
         (starting-string tab-current-string))
 
-    (if (tab-check-in-tab) (next-line 1))
+    (cl-loop repeat count
+             do (tab-move-staff 1))
 
-    (move-staff-and-restore-location count starting-string column)))
+    (tab-restore-staff-location starting-string starting-column)))
 
 
 (defun new-tab-line-width ()
@@ -1221,43 +1207,45 @@ new tuning.  Each line must be unique."
 
 
 (defun tab-relabel-string (new-tuning)
+  (save-excursion
     (beginning-of-line)
     (delete-char 2)
-    (insert (if (= (length new-tuning) 1) (concat new-tuning "-") new-tuning)))
+    (insert (if (= (length new-tuning) 1) (concat new-tuning "-") new-tuning))))
 
 
 (defun tab-relabel-all-strings (string new-tuning)
   (save-excursion
+    ;; Go to the beginning of the first staff
     (beginning-of-buffer)
-    ;; Go to the beginning of string 1
-    (unless (tab-check-in-tab) (move-staff-and-restore-location 1 0 4))
+    (tab-move-staff 1)
     (cl-loop do (progn
                   ;; Note: 4 is just to put us in the staff
-                  ;; (tab-restore-staff-location string 4)
+                  (tab-restore-staff-location string 4)
                   (tab-relabel-string new-tuning))
-             while (tab-down-staff 1))))
+             while (tab-move-staff 1))))
 
 
 (defun tab-retune-string ()
   (interactive)
 
   (when (tab-check-in-tab)
-    (let ((new-tuning (read-string "New tuning for string: "))
-          (old-string-prefix (tab-get-string-prefix tab-current-string)))
+    (let ((new-tuning (read-string "New tuning for string: ")))
       (unless (string-match-p "^[aAbBcCdDeEfFgG][#b]?$" new-tuning)
         (error "New tuning isn't a valid note name!"))
       (tab-relabel-all-strings tab-current-string new-tuning)
-      (tab-learn-string (tab-get-string-prefix-symbol tab-current-string)))))
+      (when (tab-check-in-tab)
+        (tab-learn-string (tab-get-string-prefix-symbol tab-current-string))))))
 
 
 (defun tab-learn-string (string)
   "Copy first three characters of line into STRING."
-  (let ((begin))
-    (beginning-of-line)
-    (setq begin (point-marker))
-    (forward-char 3)
-    (set string (buffer-substring begin (point-marker)))
-    (forward-line 1)))
+  (save-excursion
+    (let ((begin))
+      (beginning-of-line)
+      (setq begin (point-marker))
+      (forward-char 3)
+      (set string (buffer-substring begin (point-marker)))
+      (forward-line 1))))
 
 
 (defun tab-set-tuning (string)
