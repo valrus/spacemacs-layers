@@ -76,29 +76,30 @@ Each entry is either:
         "ll" 'tab-toggle-lyric-line
         "tr" 'tab-retune-string)
 
-      (dolist (x '(("mc" . "chord")
-                   ("ml" . "lyrics")
-                   ("mt" . "tuning"))
-        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x))))
+      (spacemacs/declare-prefix-for-mode 'tab-mode "mc" "chord")
+      (spacemacs/declare-prefix-for-mode 'tab-mode "ml" "lyrics")
+      (spacemacs/declare-prefix-for-mode 'tab-mode "mt" "tuning"))
 
     :config
     (progn
-      ; don't wait for tab-mode activation to create the mode-map
+      ;; don't wait for tab-mode activation to create the mode-map
       (tab-make-mode-map)
 
-      ; import tablature-mode maps suitable for normal mode
+      ;; import tablature-mode maps suitable for normal mode
       (cl-loop for (key . action) in tab-normal-mode-map-alist
             do (evil-define-key 'normal tab-mode-map key action))
 
-      ; Insert mode bindings
-      (evil-define-key 'insert tab-mode-map (kbd "<left>") 'tab-backward-char)
-      (evil-define-key 'insert tab-mode-map (kbd "<right>") 'tab-forward-char)
-      (evil-define-key 'insert tab-mode-map (kbd "<down>") 'evil-next-line)
-      (evil-define-key 'insert tab-mode-map (kbd "<up>") 'evil-previous-line)
+      ;; Any mode bindings
+      (dolist (mode '(normal insert))
+        (evil-define-key mode tab-mode-map (kbd "<left>") 'tab-backward-char)
+        (evil-define-key mode tab-mode-map (kbd "<right>") 'tab-forward-char)
+        (evil-define-key mode tab-mode-map (kbd "<down>") 'evil-next-line)
+        (evil-define-key mode tab-mode-map (kbd "<up>") 'evil-previous-line))
 
-      (evil-define-key 'insert tab-mode-map " " 'tab-forward)
+      ;; Insert mode bindings
+      (evil-define-key 'insert tab-mode-map " " 'tab-insert)
 
-      ; Normal mode bindings
+      ;; Normal mode bindings
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map "j" 'tab-down-string)
       (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
@@ -118,8 +119,9 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "w" 'tab-forward-barline)
       (evil-define-key 'normal tab-mode-map "b" 'tab-backward-barline)
 
-      (evil-define-key 'normal tab-mode-map "{" 'tab-up-staff)
-      (evil-define-key 'normal tab-mode-map "}" 'tab-down-staff)
+      ;; Not sure what I'm going to do with these yet
+      ;; (evil-define-key 'normal tab-mode-map "{" 'chord-mode)
+      ;; (evil-define-key 'normal tab-mode-map "}" 'lead-mode)
 
       (evil-define-key 'normal tab-mode-map (kbd "<S-left>") 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map (kbd "<S-right>") 'tab-forward-char)
@@ -134,7 +136,7 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "|" 'tab-barline-in-place)
 
       ; Visual mode bindings
-      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)))))
+      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose))))
 
 
 (defun tablature/setup-normal-mode-line ()

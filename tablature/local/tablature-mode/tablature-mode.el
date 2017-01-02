@@ -286,6 +286,15 @@ Use `\\[describe-function] tab-mode' to see documentation for tab-mode."
   (set-buffer-modified-p (buffer-modified-p)))
 
 
+(defun tab-toggle-minor-mode ()
+  (interactive)
+
+  (if (not (equal major-mode 'tab-mode))
+      (tab-mode))
+
+  (if lead-mode (chord-mode) (lead-mode)))
+
+
 (defun tab-12-tone-chords (arg)
   "Toggle 'tab-12-tone-chords flag, or set/clear according to optional argument.
 Flag controls whether chord spelling also includes rational 12-tone version."
