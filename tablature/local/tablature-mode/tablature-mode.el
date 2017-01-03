@@ -859,10 +859,9 @@ or current note (chord-mode)."
           (setq index (1+ index))
           )
         (next-line (- tab-current-string 5))
-        (forward-char 2)
-        )
+        (forward-char 2))
     ;; else
-    (insert-char ?\t 1)))
+    (insert (this-command-keys))))
 
 
 (defun tab-begin-end-region (caller-begin caller-end)
