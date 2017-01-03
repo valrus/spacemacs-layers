@@ -184,9 +184,8 @@ Each entry is either:
   (chord-mode)
   (setq-local evil-insert-state-cursor '("chartreuse3" box))
   (setq-local evil-move-cursor-back nil)
-  (setq-local indent-tabs-mode nil)
-  (setq-local tab-width 4)
-  )
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 4))
 
 
 (defun tablature/post-init-tablature-mode ()

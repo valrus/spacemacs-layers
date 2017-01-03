@@ -143,8 +143,10 @@ for automatic insertion into tab by `\\[tab-label-chord]' (tab-label-chord)")
   "^[a-gA-G][-b#]\|")
 
 (defconst tab-font-lock-keywords-1
-  `(((,tab-string-regexp . font-lock-builtin-face)
-     ("\|" . font-lock-builtin-face)))
+  `(((,tab-string-regexp . font-lock-constant-face)
+     ("\|" . font-lock-constant-face)
+     ("\\([0-9]+\\)-" . (1 font-lock-variable-name-face))
+     ("\n\t\\(.*\\)" . (1 font-lock-comment-face))))
   "Highlighting for tab mode")
 
 (defvar tab-syntax-highlights tab-font-lock-keywords-1)
