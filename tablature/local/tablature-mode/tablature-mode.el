@@ -142,6 +142,12 @@ for automatic insertion into tab by `\\[tab-label-chord]' (tab-label-chord)")
 (defvar tab-string-regexp
   "^[a-gA-G][-b#]\|")
 
+(defconst tab-font-lock-keywords-1
+  `(((,tab-string-regexp . font-lock-builtin-face)
+     ("\|" . font-lock-builtin-face)))
+  "Highlighting for tab mode")
+
+(defvar tab-syntax-highlights tab-font-lock-keywords-1)
 
 (define-derived-mode tab-mode fundamental-mode "Tablature"
   "Major mode for entering tablature.  Always use minor modes lead-mode
@@ -257,7 +263,8 @@ Full list of commands:
   (make-local-variable 'tab-3-string-prefix)
   (make-local-variable 'tab-4-string-prefix)
   (make-local-variable 'tab-5-string-prefix)
-  (make-local-variable 'fretboard-program-name))
+
+  (setq font-lock-defaults tab-syntax-highlights))
 
 
 (define-minor-mode lead-mode
@@ -594,14 +601,14 @@ to nearest modulo 3 note position. Set global variable tab-current-string."
 
 (defun tab-move-beyond-staff (direction)
   "Move to the line above or below the current staff, depending on the sign
-of direction. Return t if there is no such line (or we're not in tab),
-nil otherwise."
+of direction. Return nil if there is no such line (or we're not in tab),
+t otherwise."
   (if (not (tab-check-in-tab))
-      t
+      nil
     (if (< direction 0)
         (forward-line (- (1+ tab-current-string)))
       (forward-line (- 6 tab-current-string)))
-    (tab-check-in-tab)))
+    (not (tab-check-in-tab))))
 
 
 (defun tab-move-staff-start ()
@@ -617,7 +624,7 @@ nil otherwise."
         (search-fun (choose-re-search direction)))
     (when (tab-check-in-tab)
       ;; go to the line after this staff, if possible
-      (when (tab-move-beyond-staff direction)
+      (when (not (tab-move-beyond-staff direction))
         ;; no lines beyond this staff, bail
         (setq can-move nil)
         (goto-char tmp-saved-point)))
@@ -658,21 +665,14 @@ nil otherwise."
 
 (defun tab-toggle-lyric-line ()
   (interactive)
-  (let ((starting-string tab-current-string))
-    (if (tab-check-in-tab)
-        (progn
-          (setq tab-saved-point (copy-marker (point)))
-          (if (> (forward-line (- 6 starting-string)) 0)
-              (progn
-                (end-of-line)
-                (newline)
-                (tab-to-tab-stop)
-                (end-of-line))
-            ;; else
-            (end-of-line)
-            ))
-      ;; else
-      (goto-char tab-saved-point))))
+  (if (tab-check-in-tab)
+      (progn
+        (setq tab-saved-point (copy-marker (point)))
+        (let ((starting-string tab-current-string))
+          (if (tab-move-beyond-staff 1)
+              (end-of-line)
+            (newline))))
+    (goto-char tab-saved-point)))
 
 
 (defun tab-make-staff ()
@@ -680,29 +680,29 @@ nil otherwise."
 cursor if not already in staff."
   (interactive)
 
-  (if (tab-check-in-tab)
-      (progn
-        (forward-line (- 5 tab-current-string))
-        (beginning-of-line)
+  (let ((starting-string tab-current-string)
+        (starting-column (current-column)))
 
-        (newline (- 2 (forward-line 2)))
-        (forward-line -1))
-    ;; else
-    (progn
-      (end-of-line)
-      (newline 2)
-      (beginning-of-line)))
+    (save-excursion
+      (if (tab-move-beyond-staff 1)
+          (progn
+            (beginning-of-line)
+            (newline (forward-line 3))
+            (insert "   ")
+            (forward-line -1))
+        (end-of-line)
+        (newline 3)
+        (beginning-of-line))
 
-  (insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-  (insert tab-1-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-  (insert tab-2-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-  (insert tab-3-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-  (insert tab-4-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
-  (insert tab-5-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-1-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-2-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-3-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-4-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
+      (insert tab-5-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline))
 
-  (forward-line -6)
-  (setq tab-current-string 0)
-  (forward-char 5))
+    (tab-move-staff 1)
+    (tab-restore-staff-location starting-string starting-column)))
 
 
 (defun toggle-barline (advance)
