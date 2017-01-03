@@ -678,7 +678,7 @@ t otherwise."
 
 
 (defun tab-make-staff ()
-  "Make a tab staff.  Do below current staff if in staff, or one line below
+  "Make a tab staff.  Do below current staff if in staff, or three lines below
 cursor if not already in staff."
   (interactive)
 
@@ -686,14 +686,20 @@ cursor if not already in staff."
         (starting-column (current-column)))
 
     (save-excursion
-      (if (tab-move-beyond-staff 1)
-          (progn
-            (beginning-of-line)
-            (newline (forward-line 3))
+      ;; if we're not in a staff, try to move to the closest previous one
+      (if (not (tab-check-in-tab))
+          (tab-move-staff -1))
+
+      (if (tab-check-in-tab)
+          (let ((newline-count (if (tab-move-beyond-staff 1) 4 5)))
+            (end-of-line)
+            (newline (forward-line newline-count))
+            ;; lyric line
             (insert "   ")
             (forward-line -1))
-        (end-of-line)
-        (newline 3)
+        ;; there is no previous staff, make a lyric line and then move above it
+        (newline 2)
+        (forward-line -1)
         (beginning-of-line))
 
       (insert tab-0-string-prefix) (insert-char ?- (- (new-tab-line-width) 5)) (newline)
