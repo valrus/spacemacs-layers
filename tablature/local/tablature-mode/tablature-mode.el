@@ -850,7 +850,8 @@ or current note (chord-mode)."
   (interactive "p")
 
   (if (tab-check-in-tab)
-      (let ((index 0) (placemark))
+      (let ((index 0)
+            (placemark))
         (setq temporary-goal-column (current-column))
         (previous-line tab-current-string)
         (backward-char 2)
@@ -862,8 +863,7 @@ or current note (chord-mode)."
           (goto-char placemark)
           (setq temporary-goal-column (current-column))
           (if (< index 5) (next-line 1))
-          (setq index (1+ index))
-          )
+          (setq index (1+ index)))
         (next-line (- tab-current-string 5))
         (forward-char 2))
     ;; else

@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
-;; Author: Ian McCowan <valrus@iMac.local>
+;; Author: Ian McCowan <imccowan@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
@@ -105,10 +105,10 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
 
-      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-barline)
       (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
       (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
-      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-char)
+      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-barline)
 
       (evil-define-key 'normal tab-mode-map (kbd "C-j") 'tab-lower-string)
       (evil-define-key 'normal tab-mode-map (kbd "C-k") 'tab-higher-string)
@@ -140,23 +140,24 @@ Each entry is either:
 
 
 (defun tablature/setup-normal-mode-line ()
-  (setq mode-line-format (list ""
-  			     'mode-line-modified
-  			     'mode-line-buffer-identification
-  			     "   "
-  			     'global-mode-string
-  			     "   %[("
-  			     'mode-name
-  			     'minor-mode-alist
-  			     "--"
-  			     'tab-position-as-string
-  			     'tab-pending-embellishment
-  			     "%n"
-  			     'mode-line-process
-  			     ")%]----"
-  			     '(line-number-mode "L%l--")
-  			     '(-3 . "%p")
-  			     "-%-")))
+  (setq mode-line-format
+        (list ""
+              'mode-line-modified
+              'mode-line-buffer-identification
+              "   "
+              'global-mode-string
+              "   %[("
+              'mode-name
+              'minor-mode-alist
+              "--"
+              'tab-position-as-string
+              'tab-pending-embellishment
+              "%n"
+              'mode-line-process
+              ")%]----"
+              '(line-number-mode "L%l--")
+              '(-3 . "%p")
+              "-%-")))
 
 
 (defun tablature/post-init-spaceline ()

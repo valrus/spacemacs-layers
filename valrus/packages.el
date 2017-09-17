@@ -3,18 +3,19 @@
 (setq valrus-packages
   '(
     elm-mode
+    evil-escape
     fill-column-indicator
     flycheck
-    helm
+    ;; helm
     markdown-mode
-    neotree
+    ;; neotree
+    org-mode
     persp-mode
-    ; rainbow-delimiters
+    ;; rainbow-delimiters
     theming
-    yasnippet
 
-    ;; Exclusions
-    ; Languages I don't use
+    ;;; Exclusions
+    ;; Languages I don't use
     (coffee-mode :excluded t)
     (csharp-mode :excluded t)
     (ensime :excluded t)  ; (scala)
@@ -24,14 +25,14 @@
     (sbt-mode :excluded t)  ; (also scala)
     (scala-mode2 :excluded t)
     (scss-mode :excluded t)
-                                        ; Features I hate
+    ;; Features I hate
     (ac-ispell :excluded t)
     (flyspell :excluded t)
     (ispell :excluded t)
     (smartparens :excluded t)
-                                        ; UI things I hate
+    ;; UI things I hate
     (vi-tilde-fringe :excluded t)
-                                        ; I use either solarized or spacemacs theme
+    ;; I use either solarized or spacemacs theme
     (monokai-theme :excluded t)
     (zenburn-theme :excluded t)
     ))
@@ -39,8 +40,8 @@
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
 
-(defun valrus/post-init-yasnippet ()
-  (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))
+(defun valrus/post-init-evil-escape ()
+  (global-set-key [escape] 'evil-escape))
 
 (defun valrus/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@conf"
@@ -48,15 +49,22 @@
     :body
     (find-file (concat (getenv "HOME") "/.spacemacs"))
     (split-window-right)
-    (find-file (concat (getenv "HOME") "/.emacs.d/private/valrus/config.el"))
-    ))
+    (find-file (concat (getenv "HOME") "/.emacs.d/private/valrus/config.el"))))
 
-(defun valrus/pre-init-org ()
+(defun valrus/org-fonts ())
+
+(defun valrus/pre-init-org-mode ()
   (spacemacs|use-package-add-hook org
     :post-config
     (progn
     (setq org-bullets-bullet-list '("■" "◆" "▲" "▶")))
-    (my-org-fonts)))
+    (valrus/org-fonts)))
+
+(defun org-settings ()
+  (visual-line-mode t))
+
+(defun valrus/post-init-org-mode ()
+  (add-hook 'org-mode-hook 'valrus/org-settings))
 
 (defun valrus/post-init-flycheck ()
   (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
@@ -76,14 +84,8 @@
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
 
-(defun valrus/post-init-neotree ()
-  (setq neo-theme 'nerd))
+;; (defun valrus/post-init-neotree ()
+;;   (setq neo-theme 'nerd))
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
-
-(defun valrus/post-init-helm ()
-  ; CVS backup files start with .#
-  (add-to-list 'helm-boring-file-regexp-list "\\.\\#")
-  (delete "CVS$" helm-boring-file-regexp-list)
-  (setq-default helm-ff-skip-boring-files t))
