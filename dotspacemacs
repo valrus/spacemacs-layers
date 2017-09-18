@@ -57,6 +57,7 @@ values."
      (syntax-checking :variables
                       syntax-checking-enable-tooltips nil)
      tablature
+     themes-megapack
      valrus
      ;; version-control
      )
@@ -121,13 +122,12 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-light
-                         spacemacs-dark
+   dotspacemacs-themes '(
                          solarized-light
                          solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+                         spacemacs-light
+                         spacemacs-dark
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -284,52 +284,11 @@ values."
                       :weight 'ultra-light
                       :height 120))
 
-(defun my-powerline-fonts ()
-  (let ((modeline-font "Iosevka Slab")
-        (modeline-height 120))
-                                        ; File name and navigation percentage
-    (set-face-attribute 'mode-line nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'mode-line-inactive nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-                                        ; Other modeline faces
-    (set-face-attribute 'powerline-active1 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-active2 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-inactive1 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-inactive2 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    )
-  (setq powerline-default-separator nil)
-  (spaceline-compile))
-
-(defun my-setup-latex ()
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-command-list
-                  '("LatexMk" "latexmk -pdf %s" TeX-run-command t t :help "Run LatexMk") t)))
-
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
   (my-default-fonts)
-  (my-powerline-fonts)
   (spacemacs/toggle-mode-line-minor-modes-off)
-  (my-setup-latex)
   (with-eval-after-load 'company
         (add-to-list 'company-backends 'company-elm)))
 
@@ -344,12 +303,15 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25 t)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil t)
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(evil-want-Y-yank-to-eol t)
  '(flycheck-display-errors-function (quote flycheck-display-error-messages))
  '(flycheck-python-pylint-executable "/Users/valrus/.pyenv/versions/kivy/bin/pylint")
  '(flycheck-standard-error-navigation nil)
  '(package-selected-packages
    (quote
-    (evil-goggles wgrep smex ivy-hydra counsel-projectile counsel swiper ivy winum fuzzy anaconda-mode jedi jedi-core csv-mode auctex-latexmk company-auctex auctex web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data hide-comnt yapfify ws-butler window-numbering window+ which-key web-beautify volatile-highlights uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pytest pyenv-mode py-isort pungi popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint kivy-mode json-mode js2-refactor js-doc info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot glsl-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md frame-cmds flycheck-pos-tip flycheck-elm flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elm-mode elisp-slime-nav dumb-jump define-word cython-mode company-tern company-statistics company-quickhelp company-anaconda column-enforce-mode color-identifiers-mode clean-aindent-mode autofit-frame auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (zonokai-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme evil-goggles wgrep smex ivy-hydra counsel-projectile counsel swiper ivy winum fuzzy anaconda-mode jedi jedi-core csv-mode auctex-latexmk company-auctex auctex web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data hide-comnt yapfify ws-butler window-numbering window+ which-key web-beautify volatile-highlights uuidgen use-package toc-org spacemacs-theme spaceline smeargle restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pytest pyenv-mode py-isort pungi popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint kivy-mode json-mode js2-refactor js-doc info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot glsl-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md frame-cmds flycheck-pos-tip flycheck-elm flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elm-mode elisp-slime-nav dumb-jump define-word cython-mode company-tern company-statistics company-quickhelp company-anaconda column-enforce-mode color-identifiers-mode clean-aindent-mode autofit-frame auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore))
  '(safe-local-variable-values
@@ -396,8 +358,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(evil-goggles-delete-face ((t (:inherit diff-removed))))
  '(evil-goggles-paste-face ((t (:inherit diff-added))))
  '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))

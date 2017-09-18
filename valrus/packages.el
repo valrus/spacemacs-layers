@@ -11,6 +11,7 @@
     ;; neotree
     org-mode
     persp-mode
+    spaceline
     ;; rainbow-delimiters
     theming
 
@@ -89,3 +90,36 @@
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
+
+(defun valrus/post-init-spaceline ()
+  (let ((modeline-font "Iosevka Slab")
+        (modeline-height 120))
+                                        ; File name and navigation percentage
+    (set-face-attribute 'mode-line nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+    (set-face-attribute 'mode-line-inactive nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+                                        ; Other modeline faces
+    (set-face-attribute 'powerline-active1 nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+    (set-face-attribute 'powerline-active2 nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+    (set-face-attribute 'powerline-inactive1 nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+    (set-face-attribute 'powerline-inactive2 nil
+                        :font modeline-font
+                        :height modeline-height
+                        :weight 'ultra-light)
+    )
+  (setq powerline-default-separator nil)
+  (spaceline-compile))
