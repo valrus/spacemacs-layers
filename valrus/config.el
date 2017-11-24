@@ -5,6 +5,9 @@
 ;; Load changes from disk automatically
 (global-auto-revert-mode 1)
 
+;; wtf mac os x pasting
+(fset 'evil-visual-update-x-selection 'ignore)
+
 ;; Center after searching
 (defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)
   (evil-scroll-line-to-center (line-number-at-pos)))
@@ -35,13 +38,14 @@
 
 (add-hook 'org-mode-hook 'my-org-settings)
 
-;; markdown
-(defun my-markdown-config ()
+;; markdown and ReST
+(defun my-text-config ()
   (visual-line-mode t)
   (auto-complete-mode 0)
   (variable-pitch-mode t))
 
-(add-hook 'markdown-mode-hook 'my-markdown-config)
+(add-hook 'markdown-mode-hook 'my-text-config)
+(add-hook 'rst-mode-hook 'my-text-config)
 
 ;; python
 (defun flycheck-python-set-executables ()

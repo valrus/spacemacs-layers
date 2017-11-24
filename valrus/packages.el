@@ -14,6 +14,7 @@
     spaceline
     ;; rainbow-delimiters
     theming
+    yaml-mode
 
     ;;; Exclusions
     ;; Languages I don't use
@@ -123,3 +124,6 @@
     )
   (setq powerline-default-separator nil)
   (spaceline-compile))
+
+(defun valrus/post-init-yaml-mode ()
+  (setq yaml-indent-offset 4))
