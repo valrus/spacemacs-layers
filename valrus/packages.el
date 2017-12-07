@@ -2,12 +2,15 @@
 ; which require an initialization must be listed explicitly in the list.
 (setq valrus-packages
   '(
+    atomic-chrome
     elm-mode
+    evil-escape
     fill-column-indicator
     flycheck
-    helm
+    ; helm
     markdown-mode
-    neotree
+    mediawiki
+    ; neotree
     persp-mode
     ; rainbow-delimiters
     theming
@@ -36,11 +39,23 @@
     (zenburn-theme :excluded t)
     ))
 
+(defun valrus/init-mediawiki ()
+  "Initialize mediawiki mode."
+  (use-package mediawiki))
+
+(defun valrus/init-atomic-chrome ()
+  "Initialize atomic-chrome."
+  (use-package atomic-chrome
+    :config
+    (atomic-chrome-start-server)
+    (setq atomic-chrome-url-major-mode-alist
+          '(("jira.com" . mediawiki-mode)))))
+
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
 
 (defun valrus/post-init-yasnippet ()
-  (setq yas-snippet-dirs "~/.emacs.d/private/snippets" yas-installed-snippets-dir))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/private/snippets"))
 
 (defun valrus/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@conf"
@@ -48,15 +63,16 @@
     :body
     (find-file (concat (getenv "HOME") "/.spacemacs"))
     (split-window-right)
-    (find-file (concat (getenv "HOME") "/.emacs.d/private/valrus/config.el"))
-    ))
+    (find-file (concat (getenv "HOME") "/.emacs.d/private/valrus/config.el"))))
 
-(defun valrus/pre-init-org ()
-  (spacemacs|use-package-add-hook org
-    :post-config
-    (progn
-    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶")))
-    (my-org-fonts)))
+(defun my-org-fonts ()
+  )
+
+(defun valrus/post-init-org ()
+  (add-hook 'org-mode-hook #'toggle-word-wrap)
+  (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+  (setq org-startup-truncated nil)
+  (my-org-fonts))
 
 (defun valrus/post-init-flycheck ()
   (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
@@ -76,14 +92,11 @@
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
 
-(defun valrus/post-init-neotree ()
-  (setq neo-theme 'nerd))
+;; (defun valrus/post-init-neotree ()
+;;   (setq neo-theme 'nerd))
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
 
-(defun valrus/post-init-helm ()
-  ; CVS backup files start with .#
-  (add-to-list 'helm-boring-file-regexp-list "\\.\\#")
-  (delete "CVS$" helm-boring-file-regexp-list)
-  (setq-default helm-ff-skip-boring-files t))
+(defun valrus/post-init-evil-escape ()
+  (global-set-key [escape] 'evil-escape))
