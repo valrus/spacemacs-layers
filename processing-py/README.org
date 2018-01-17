@@ -10,8 +10,9 @@
 - [[#key-bindings][Key bindings]]
 
 * Description
-This layer does wonderful things:
-  - thing01
+Layer for Processing.py.
+For now, that means syntax coloring identical to Python's,
+but without Flycheck complaining about all the new builtins.
 
 * Install
 To use this configuration layer, add it to your =~/.spacemacs=. You will need to
