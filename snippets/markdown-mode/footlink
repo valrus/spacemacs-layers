@@ -1,6 +1,0 @@
-# -*- mode: snippet; require-final-newline: nil -*-
-# name: footlink
-# key: footlink
-# binding: direct-keybinding
-# --
-<sup id="ref$0"><a href="#foot$0" class="ref"></a></sup>
