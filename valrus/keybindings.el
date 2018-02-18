@@ -9,6 +9,10 @@
   "w-" 'split-window-below-and-focus
   "w|" 'split-window-right-and-focus)
 
+(spacemacs/set-leader-keys
+  "/" 'counsel-rg)
+
+
 ;;; Misc things I'm just used to
 (define-key evil-normal-state-map "U" 'undo-tree-redo)
 

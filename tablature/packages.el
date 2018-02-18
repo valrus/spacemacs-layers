@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
-;; Author: Ian McCowan <valrus@iMac.local>
+;; Author: Ian McCowan <imccowan@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
@@ -82,31 +82,33 @@ Each entry is either:
 
     :config
     (progn
-      ; don't wait for tab-mode activation to create the mode-map
+      ;; don't wait for tab-mode activation to create the mode-map
       (tab-make-mode-map)
 
-      ; import tablature-mode maps suitable for normal mode
+      ;; import tablature-mode maps suitable for normal mode
       (cl-loop for (key . action) in tab-normal-mode-map-alist
             do (evil-define-key 'normal tab-mode-map key action))
 
-      ; Insert mode bindings
-      (evil-define-key 'insert tab-mode-map (kbd "<left>") 'tab-backward-char)
-      (evil-define-key 'insert tab-mode-map (kbd "<right>") 'tab-forward-char)
-      (evil-define-key 'insert tab-mode-map (kbd "<down>") 'evil-next-line)
-      (evil-define-key 'insert tab-mode-map (kbd "<up>") 'evil-previous-line)
+      ;; Any mode bindings
+      (dolist (mode '(normal insert))
+        (evil-define-key mode tab-mode-map (kbd "<left>") 'tab-backward-char)
+        (evil-define-key mode tab-mode-map (kbd "<right>") 'tab-forward-char)
+        (evil-define-key mode tab-mode-map (kbd "<down>") 'evil-next-line)
+        (evil-define-key mode tab-mode-map (kbd "<up>") 'evil-previous-line))
 
-      (evil-define-key 'insert tab-mode-map " " 'tab-forward)
+      ;; Insert mode bindings
+      (evil-define-key 'insert tab-mode-map " " 'tab-insert)
 
-      ; Normal mode bindings
+      ;; Normal mode bindings
       (evil-define-key 'normal tab-mode-map "h" 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map "j" 'tab-down-string)
       (evil-define-key 'normal tab-mode-map "k" 'tab-up-string)
       (evil-define-key 'normal tab-mode-map "l" 'tab-forward-char)
 
-      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-char)
+      (evil-define-key 'normal tab-mode-map "H" 'tab-backward-barline)
       (evil-define-key 'normal tab-mode-map "J" 'tab-down-staff)
       (evil-define-key 'normal tab-mode-map "K" 'tab-up-staff)
-      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-char)
+      (evil-define-key 'normal tab-mode-map "L" 'tab-forward-barline)
 
       (evil-define-key 'normal tab-mode-map (kbd "C-j") 'tab-lower-string)
       (evil-define-key 'normal tab-mode-map (kbd "C-k") 'tab-higher-string)
@@ -117,8 +119,9 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "w" 'tab-forward-barline)
       (evil-define-key 'normal tab-mode-map "b" 'tab-backward-barline)
 
-      (evil-define-key 'normal tab-mode-map "{" 'tab-up-staff)
-      (evil-define-key 'normal tab-mode-map "}" 'tab-down-staff)
+      ;; Not sure what I'm going to do with these yet
+      ;; (evil-define-key 'normal tab-mode-map "{" 'chord-mode)
+      ;; (evil-define-key 'normal tab-mode-map "}" 'lead-mode)
 
       (evil-define-key 'normal tab-mode-map (kbd "<S-left>") 'tab-backward-char)
       (evil-define-key 'normal tab-mode-map (kbd "<S-right>") 'tab-forward-char)
@@ -137,23 +140,24 @@ Each entry is either:
 
 
 (defun tablature/setup-normal-mode-line ()
-  (setq mode-line-format (list ""
-  			     'mode-line-modified
-  			     'mode-line-buffer-identification
-  			     "   "
-  			     'global-mode-string
-  			     "   %[("
-  			     'mode-name
-  			     'minor-mode-alist
-  			     "--"
-  			     'tab-position-as-string
-  			     'tab-pending-embellishment
-  			     "%n"
-  			     'mode-line-process
-  			     ")%]----"
-  			     '(line-number-mode "L%l--")
-  			     '(-3 . "%p")
-  			     "-%-")))
+  (setq mode-line-format
+        (list ""
+              'mode-line-modified
+              'mode-line-buffer-identification
+              "   "
+              'global-mode-string
+              "   %[("
+              'mode-name
+              'minor-mode-alist
+              "--"
+              'tab-position-as-string
+              'tab-pending-embellishment
+              "%n"
+              'mode-line-process
+              ")%]----"
+              '(line-number-mode "L%l--")
+              '(-3 . "%p")
+              "-%-")))
 
 
 (defun tablature/post-init-spaceline ()
@@ -181,9 +185,8 @@ Each entry is either:
   (chord-mode)
   (setq-local evil-insert-state-cursor '("chartreuse3" box))
   (setq-local evil-move-cursor-back nil)
-  (setq-local indent-tabs-mode nil)
-  (setq-local tab-width 4)
-  )
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 4))
 
 
 (defun tablature/post-init-tablature-mode ()
