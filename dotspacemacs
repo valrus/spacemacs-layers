@@ -1,4 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
+;; -*- no-byte-compile: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -55,12 +56,14 @@ values."
      html
      ivy
      javascript
-     kivy
+     ;; kivy
      latex
-     local
+     ;; local
      markdown
      org
+     processing-py
      python
+     rust
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -73,7 +76,7 @@ values."
      ;; spell-checking
      (syntax-checking :variables
                       syntax-checking-enable-tooltips nil)
-     tablature
+     ;; tablature
      valrus
      ;; version-control
      yaml
@@ -169,7 +172,7 @@ values."
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
    ;; (default "SPC")
-   dotspacemacs-emacs-command-key "SPC"
+   dotspacemacs-emacs-command-key ":"
    ;; The key used for Vim Ex commands (default ":")
    dotspacemacs-ex-command-key ":"
    ;; The leader key accessible in `emacs state' and `insert state'
