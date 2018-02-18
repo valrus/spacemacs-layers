@@ -25,6 +25,37 @@
 (defun make-backup-file-name (file)
   (concat "~/.emacs_backups/" (file-name-nondirectory file) "~"))
 
+;;; Security https://glyph.twistedmatrix.com/2015/11/editor-malware.html
+(setq tls-checktrust t)
+
+(let ((trustfile
+       (replace-regexp-in-string
+        "\\\\" "/"
+        (replace-regexp-in-string
+         "\n" ""
+         (shell-command-to-string "python -m certifi")))))
+  (setq tls-program
+        (list
+         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                 (if (eq window-system 'w32) ".exe" "") trustfile)))
+  (setq gnutls-verify-error t)
+  (setq gnutls-trustfiles (list trustfile)))
+
+;; (let ((bad-hosts
+;;        (loop for bad
+;;              in `("https://wrong.host.badssl.com/"
+;;                   "https://self-signed.badssl.com/")
+;;              if (condition-case e
+;;                     (url-retrieve
+;;                      bad (lambda (retrieved) t))
+;;                   (error nil))
+;;              collect bad)))
+;;   (if bad-hosts
+;;       (error (format "tls misconfigured; retrieved %s ok"
+;;                      bad-hosts))
+;;     (url-retrieve "https://badssl.com"
+;;                   (lambda (retrieved) t))))
+
 ;;; Mode-specific settings
 ;; GNU makefile
 (defun my-gnumakefile-settings ()
@@ -60,6 +91,8 @@
             nil 'local))
 
 (defun my-python-config ()
+  ;; include underscores in word motions
+  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
   (flycheck-python-setup)
   (smartparens-mode 0))
 

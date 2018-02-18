@@ -2,6 +2,7 @@
 ; which require an initialization must be listed explicitly in the list.
 (setq valrus-packages
   '(
+    atomic-chrome
     elm-mode
     evil-escape
     fill-column-indicator
@@ -39,8 +40,23 @@
     (zenburn-theme :excluded t)
     ))
 
+(defun valrus/init-mediawiki ()
+  "Initialize mediawiki mode."
+  (use-package mediawiki))
+
+(defun valrus/init-atomic-chrome ()
+  "Initialize atomic-chrome."
+  (use-package atomic-chrome
+    :config
+    (atomic-chrome-start-server)
+    (setq atomic-chrome-url-major-mode-alist
+          '(("jira.com" . mediawiki-mode)))))
+
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
+
+(defun valrus/post-init-yasnippet ()
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/private/snippets"))
 
 (defun valrus/post-init-evil-escape ()
   (global-set-key [escape] 'evil-escape))
@@ -81,7 +97,11 @@
 
 (defun valrus/post-init-theming ()
   (when (configuration-layer/package-usedp 'rainbow-delimiters)
-  (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts)))
+    (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts))
+  (mapc
+   (lambda (face)
+     (set-face-attribute face nil :overline nil))
+   (face-list)))
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
