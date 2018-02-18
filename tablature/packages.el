@@ -76,10 +76,9 @@ Each entry is either:
         "ll" 'tab-toggle-lyric-line
         "tr" 'tab-retune-string)
 
-      (dolist (x '(("mc" . "chord")
-                   ("ml" . "lyrics")
-                   ("mt" . "tuning"))
-        (spacemacs/declare-prefix-for-mode 'tab-mode (car x) (cdr x))))
+      (spacemacs/declare-prefix-for-mode 'tab-mode "mc" "chord")
+      (spacemacs/declare-prefix-for-mode 'tab-mode "ml" "lyrics")
+      (spacemacs/declare-prefix-for-mode 'tab-mode "mt" "tuning"))
 
     :config
     (progn
@@ -134,7 +133,7 @@ Each entry is either:
       (evil-define-key 'normal tab-mode-map "|" 'tab-barline-in-place)
 
       ; Visual mode bindings
-      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose)))))
+      (evil-define-key 'visual tab-mode-map "+" 'tab-transpose))))
 
 
 (defun tablature/setup-normal-mode-line ()

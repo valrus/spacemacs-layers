@@ -2,6 +2,7 @@
 ; which require an initialization must be listed explicitly in the list.
 (setq valrus-packages
   '(
+    auctex
     elm-mode
     fill-column-indicator
     flycheck
@@ -35,6 +36,15 @@
     (monokai-theme :excluded t)
     (zenburn-theme :excluded t)
     ))
+
+(defun valrus/post-init-auctex ()
+  (cond
+   ((string-equal system-type "darwin")
+    (progn (setq TeX-view-program-selection '((output-pdf "Preview")))))
+   ((string-equal system-type "gnu/linux")
+    (progn
+      (add-to-list 'TeX-view-program-list '("mupdf" "/usr/bin/mupdf %o"))
+      (setq TeX-view-program-selection '((output-pdf "mupdf")))))))
 
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
