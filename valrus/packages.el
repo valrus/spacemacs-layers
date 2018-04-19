@@ -2,17 +2,16 @@
 ; which require an initialization must be listed explicitly in the list.
 (setq valrus-packages
   '(
-    atomic-chrome
     elm-mode
     evil-escape
     fill-column-indicator
     flycheck
+    linum-relative
     ;; helm
     markdown-mode
     ;; neotree
     org-mode
     persp-mode
-    spaceline
     ;; rainbow-delimiters
     theming
     yaml-mode
@@ -44,16 +43,14 @@
   "Initialize mediawiki mode."
   (use-package mediawiki))
 
-(defun valrus/init-atomic-chrome ()
-  "Initialize atomic-chrome."
-  (use-package atomic-chrome
-    :config
-    (atomic-chrome-start-server)
-    (setq atomic-chrome-url-major-mode-alist
-          '(("jira.com" . mediawiki-mode)))))
-
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
+
+(defun valrus/pre-init-linum-relative ()
+  (setq linum-relative-backend 'display-line-numbers-mode))
+
+(defun valrus/post-init-linum-relative ()
+  (linum-relative-global-mode))
 
 (defun valrus/post-init-yasnippet ()
   (add-to-list 'yas-snippet-dirs "~/.emacs.d/private/snippets"))
@@ -62,6 +59,8 @@
   (global-set-key [escape] 'evil-escape))
 
 (defun valrus/post-init-persp-mode ()
+  ;; Don't kill foreign buffers to avoid a bunch of warnings on clean-buffer-list
+  (setq persp-kill-foreign-buffer-behaviour nil)
   (spacemacs|define-custom-layout "@conf"
     :binding "c"
     :body
@@ -78,7 +77,7 @@
     (setq org-bullets-bullet-list '("■" "◆" "▲" "▶")))
     (valrus/org-fonts)))
 
-(defun org-settings ()
+(defun valrus/org-settings ()
   (visual-line-mode t))
 
 (defun valrus/post-init-org-mode ()
@@ -100,8 +99,15 @@
     (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts))
   (mapc
    (lambda (face)
-     (set-face-attribute face nil :overline nil))
+     (set-face-attribute face nil :overline nil)
+     (valrus/fix-face-box face))
    (face-list)))
+
+(defun valrus/fix-face-box (face)
+  (let ((box-attr (face-attribute face :box nil 'default)))
+    (when (and (consp box-attr) (plist-member box-attr :line-width))
+      (set-face-attribute face nil :box
+                          (plist-put box-attr :line-width (- (abs (plist-get box-attr :line-width))))))))
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
@@ -111,39 +117,6 @@
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
-
-(defun valrus/post-init-spaceline ()
-  (let ((modeline-font "Iosevka Slab")
-        (modeline-height 120))
-                                        ; File name and navigation percentage
-    (set-face-attribute 'mode-line nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'mode-line-inactive nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-                                        ; Other modeline faces
-    (set-face-attribute 'powerline-active1 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-active2 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-inactive1 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    (set-face-attribute 'powerline-inactive2 nil
-                        :font modeline-font
-                        :height modeline-height
-                        :weight 'ultra-light)
-    )
-  (setq powerline-default-separator nil)
-  (spaceline-compile))
 
 (defun valrus/post-init-yaml-mode ()
   (setq yaml-indent-offset 4))
