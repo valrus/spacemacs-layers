@@ -60,10 +60,10 @@ values."
      local
      markdown
      org
-     ;; python
+     python
      (ruby :variables
            ruby-enable-ruby-on-rails-support t
-           ; ruby-enable-enh-ruby-mode t
+           ruby-enable-enh-ruby-mode t
            ruby-version-manager 'rvm)
      ruby-on-rails
      ;; (shell :variables
@@ -82,11 +82,15 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      doom-themes
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    linum
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -94,7 +98,7 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-but-keep-unused))
+   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -150,7 +154,7 @@ values."
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-scratch-mode 'emacs-lisp-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -164,7 +168,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Iosevka"
                                :weight regular
-                               :size 12)
+                               :size 10)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -187,7 +191,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ nil
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
@@ -251,11 +255,11 @@ values."
    dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -287,7 +291,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -336,21 +340,17 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (set-face-attribute 'default nil
                       :font "Iosevka"
                       :weight 'light
-                      :height 120)
-  (set-face-attribute 'linum nil
-                      :font "Iosevka"
-                      :weight 'ultra-light
-                      :height 120)
+                      :height 100)
   (set-face-attribute 'font-lock-comment-face nil
                       :font "Iosevka"
                       :weight 'ultra-light
-                      :height 120)
+                      :height 100)
   (set-face-attribute 'variable-pitch nil
                       :font "Rosario"
                       :weight 'light
-                      :height 140)
+                      :height 120)
   ;; Add a little extra line spacing so over/underlines don't mess things up
-  (setq-default line-spacing 1))
+  (setq-default line-spacing 0))
 
 (defun my-include-underscores-in-words ()
   (modify-syntax-entry ?_ "w"))
@@ -373,17 +373,17 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ac-ispell-requires 4)
- '(ahs-case-fold-search nil t)
- '(ahs-default-range (quote ahs-range-whole-buffer) t)
- '(ahs-idle-interval 0.25 t)
+ '(ahs-case-fold-search nil)
+ '(ahs-default-range (quote ahs-range-whole-buffer))
+ '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil t)
+ '(ahs-inhibit-face-list nil)
  '(flycheck-display-errors-function (quote flycheck-display-error-messages))
  '(flycheck-python-pylint-executable "/Users/valrus/.pyenv/versions/kivy/bin/pylint")
  '(flycheck-standard-error-navigation nil)
  '(package-selected-packages
    (quote
-    (org-mime orgit parent-mode evil-goggles enh-ruby-mode ruby-tools ruby-test-mode chruby inf-ruby mediawiki atomic-chrome websocket powerline vimrc-mode dactyl-mode yaml-mode wgrep smex ivy-hydra counsel-projectile counsel swiper ivy projectile-rails inflections feature-mode web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rvm rubocop rspec-mode robe rbenv rake minitest bundler yapfify window+ web-beautify smeargle rainbow-mode rainbow-identifiers pyvenv pytest pyenv-mode py-isort pip-requirements org-projectile org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode kivy-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-company helm-c-yasnippet gnuplot glsl-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy frame-cmds frame-fns flycheck-pos-tip flycheck-elm flycheck evil-magit magit magit-popup git-commit with-editor elm-mode cython-mode company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-anaconda company color-identifiers-mode autofit-frame fit-frame auto-yasnippet yasnippet auto-complete anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (doom-themes all-the-icons memoize org-mime orgit parent-mode evil-goggles enh-ruby-mode ruby-tools ruby-test-mode chruby inf-ruby mediawiki atomic-chrome websocket powerline vimrc-mode dactyl-mode yaml-mode wgrep smex ivy-hydra counsel-projectile counsel swiper ivy projectile-rails inflections feature-mode web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rvm rubocop rspec-mode robe rbenv rake minitest bundler yapfify window+ web-beautify smeargle rainbow-mode rainbow-identifiers pyvenv pytest pyenv-mode py-isort pip-requirements org-projectile org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode kivy-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-company helm-c-yasnippet gnuplot glsl-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy frame-cmds frame-fns flycheck-pos-tip flycheck-elm flycheck evil-magit magit magit-popup git-commit with-editor elm-mode cython-mode company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-anaconda company color-identifiers-mode autofit-frame fit-frame auto-yasnippet yasnippet auto-complete anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore))
  '(solarized-high-contrast-mode-line t))
