@@ -109,7 +109,7 @@
    (face-list)))
 
 (defun valrus/fix-face-box (face)
-  "Make sure all faces with a box plist have negative :line-width so they don't shift text around"
+  "Make sure all faces with a box have negative :line-width so they don't shift text around"
   (let ((box-attr (face-attribute face :box nil 'default)))
     (cond
      ((consp box-attr)
