@@ -109,11 +109,17 @@
    (face-list)))
 
 (defun valrus/fix-face-box (face)
+  "Make sure all faces with a box plist have negative :line-width so they don't shift text around"
   (let ((box-attr (face-attribute face :box nil 'default)))
-    (when (and (consp box-attr) (plist-member box-attr :line-width))
+    (cond
+     ((consp box-attr)
       (let ((result (copy-sequence box-attr)))
-        (plist-put result :line-width (- (abs (plist-get box-attr :line-width))))
-        (set-face-attribute face nil :box result)))))
+        (plist-put result :line-width (- (abs (or (plist-get box-attr :line-width) 1))))
+        (set-face-attribute face nil :box result)))
+     ((stringp box-attr)
+      (set-face-attribute face nil :box '(:color box-attr :line-width -1)))
+     (box-attr
+      (set-face-attribute face nil :box '(:line-width -1))))))
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
