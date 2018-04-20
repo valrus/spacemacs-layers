@@ -64,8 +64,7 @@
 (add-hook 'makefile-gmake-mode-hook 'my-gnumakefile-settings t)
 
 ;; org-mode
-(defun my-org-settings ()
-  (linum-mode 0))
+(defun my-org-settings ())
 
 (add-hook 'org-mode-hook 'my-org-settings)
 
