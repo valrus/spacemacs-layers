@@ -111,8 +111,9 @@
 (defun valrus/fix-face-box (face)
   (let ((box-attr (face-attribute face :box nil 'default)))
     (when (and (consp box-attr) (plist-member box-attr :line-width))
-      (set-face-attribute face nil :box
-                          (plist-put box-attr :line-width (- (abs (plist-get box-attr :line-width))))))))
+      (let ((result (copy-sequence box-attr)))
+        (plist-put result :line-width (- (abs (plist-get box-attr :line-width))))
+        (set-face-attribute face nil :box result)))))
 
 (defun valrus/post-init-markdown-mode ()
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
