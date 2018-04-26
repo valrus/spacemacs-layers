@@ -8,11 +8,13 @@
     flycheck
     linum-relative
     ;; helm
+    linum-relative
     markdown-mode
     ;; neotree
     org-mode
     persp-mode
     ;; rainbow-delimiters
+    spaceline
     theming
     yaml-mode
 
@@ -37,16 +39,9 @@
     ;; I use either solarized or spacemacs theme
     (monokai-theme :excluded t)
     (zenburn-theme :excluded t)
+    ;; Disable in favor of linum-relative
+    (linum :excluded t)
     ))
-
-(defun valrus/post-init-auctex ()
-  (cond
-   ((string-equal system-type "darwin")
-    (progn (setq TeX-view-program-selection '((output-pdf "Preview")))))
-   ((string-equal system-type "gnu/linux")
-    (progn
-      (add-to-list 'TeX-view-program-list '("mupdf" "/usr/bin/mupdf %o"))
-      (setq TeX-view-program-selection '((output-pdf "mupdf")))))))
 
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
@@ -129,6 +124,32 @@
 
 (defun valrus/post-init-elm-mode ()
   (setq elm-indent-offset 4))
+
+(defun valrus/post-init-spaceline ()
+  (let ((modeline-font "Iosevka Term Slab"))
+                                        ; File name and navigation percentage
+    (set-face-attribute 'mode-line nil
+                        :font modeline-font
+                        :weight 'light)
+    (set-face-attribute 'mode-line-inactive nil
+                        :font modeline-font
+                        :weight 'light)
+                                        ; Other modeline faces
+    (set-face-attribute 'powerline-active1 nil
+                        :font modeline-font
+                        :weight 'ultra-light)
+    (set-face-attribute 'powerline-active2 nil
+                        :font modeline-font
+                        :weight 'ultra-light)
+    (set-face-attribute 'powerline-inactive1 nil
+                        :font modeline-font
+                        :weight 'light)
+    (set-face-attribute 'powerline-inactive2 nil
+                        :font modeline-font
+                        :weight 'light)
+    )
+  (setq powerline-default-separator nil)
+  (spaceline-compile))
 
 (defun valrus/post-init-yaml-mode ()
   (setq yaml-indent-offset 4))
