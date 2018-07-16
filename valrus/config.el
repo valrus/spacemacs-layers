@@ -21,6 +21,28 @@
 (defadvice evil-jumper/backward (after advice-for-evil-jumper/backward activate)
   (evil-scroll-line-to-center (line-number-at-pos)))
 
+;; Don't let boxes mess with line heights
+(defun valrus/fix-face-box (face)
+  "Make sure all faces with a box have negative :line-width so they don't shift text around"
+  (let ((box-attr (face-attribute face :box nil 'default)))
+    (cond
+     ((consp box-attr)
+      (let ((result (copy-sequence box-attr)))
+        (plist-put result :line-width (- (abs (or (plist-get box-attr :line-width) 1))))
+        (set-face-attribute face nil :box result)))
+     ((stringp box-attr)
+      (set-face-attribute face nil :box '(:color box-attr :line-width -1)))
+     (box-attr
+      (set-face-attribute face nil :box '(:line-width -1))))))
+
+(when (configuration-layer/layer-usedp 'theming)
+  (mapc
+   (lambda (face)
+     (set-face-attribute face nil :overline nil)
+     (valrus/fix-face-box face))
+   (face-list)))
+
+
 ;;; Relocate backup files that get strewn everywhere
 (defun make-backup-file-name (file)
   (concat "~/.emacs_backups/" (file-name-nondirectory file) "~"))
@@ -90,15 +112,18 @@
             nil 'local))
 
 (defun my-python-config ()
-  ;; include underscores in word motions
-  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
   (flycheck-python-setup)
   (smartparens-mode 0))
 
 (add-hook 'python-mode-hook 'my-python-config)
+;; include underscores in word motions
+(add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
 ;; C
 (defun my-c-settings ()
   (setq c-basic-offset 4))
 
 (add-hook 'c-mode-common-hook 'my-c-settings)
+
+;; give me my em-dashes back
+(setq mac-right-option-modifier nil)

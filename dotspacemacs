@@ -40,8 +40,10 @@ values."
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t
+                      auto-completion-tab-key-behavior 'complete
                       :disabled-for
                       markdown
+                      org
                       rst)
      ;; better-defaults
      colors
@@ -57,8 +59,8 @@ values."
      ivy
      javascript
      ;; kivy
-     latex
-     ;; local
+     ;; latex
+     local
      markdown
      org
      python
@@ -168,7 +170,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Iosevka"
-                               :weight regular
+                               :weight light
                                :size 10)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -334,8 +336,7 @@ It is called immediately after `dotspacemacs/init', before layer configuration
 executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
-)
+`dotspacemacs/user-config' first.")
 
 (defun my-default-fonts ()
   (set-face-attribute 'default nil
@@ -348,8 +349,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
                       :height 100)
   (set-face-attribute 'variable-pitch nil
                       :font "Rosario"
+                      :weight 'regular
+                      :height 110)
+  (set-face-attribute 'line-number nil
+                      :font "Iosevka"
                       :weight 'light
-                      :height 120)
+                      :height 90)
+  (set-face-attribute 'line-number-current-line nil
+                      :font "Iosevka"
+                      :weight 'bold
+                      :height 90)
   ;; Add a little extra line spacing so over/underlines don't mess things up
   (setq-default line-spacing 0))
 
@@ -364,6 +373,11 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (my-default-fonts)
+
+  ;; fancy frames
+  ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  ;; (add-to-list 'default-frame-alist '(ns-appearance . light))
+
   ;; kill ugly line wrap things
   (spacemacs/toggle-visual-line-navigation-off)
   (spacemacs/toggle-mode-line-minor-modes-off))
@@ -384,7 +398,7 @@ you should place your code here."
  '(flycheck-standard-error-navigation nil)
  '(package-selected-packages
    (quote
-    (doom-themes all-the-icons memoize org-mime orgit parent-mode evil-goggles enh-ruby-mode ruby-tools ruby-test-mode chruby inf-ruby mediawiki atomic-chrome websocket powerline vimrc-mode dactyl-mode yaml-mode wgrep smex ivy-hydra counsel-projectile counsel swiper ivy projectile-rails inflections feature-mode web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rvm rubocop rspec-mode robe rbenv rake minitest bundler yapfify window+ web-beautify smeargle rainbow-mode rainbow-identifiers pyvenv pytest pyenv-mode py-isort pip-requirements org-projectile org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode kivy-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-company helm-c-yasnippet gnuplot glsl-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy frame-cmds frame-fns flycheck-pos-tip flycheck-elm flycheck evil-magit magit magit-popup git-commit with-editor elm-mode cython-mode company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-anaconda company color-identifiers-mode autofit-frame fit-frame auto-yasnippet yasnippet auto-complete anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (deadgrep company-auctex auctex doom-themes all-the-icons memoize org-mime orgit parent-mode evil-goggles enh-ruby-mode ruby-tools ruby-test-mode chruby inf-ruby mediawiki atomic-chrome websocket powerline vimrc-mode dactyl-mode yaml-mode wgrep smex ivy-hydra counsel-projectile counsel swiper ivy projectile-rails inflections feature-mode web-mode tagedit slim-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data rvm rubocop rspec-mode robe rbenv rake minitest bundler yapfify window+ web-beautify smeargle rainbow-mode rainbow-identifiers pyvenv pytest pyenv-mode py-isort pip-requirements org-projectile org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode kivy-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize helm-pydoc helm-gitignore helm-company helm-c-yasnippet gnuplot glsl-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy frame-cmds frame-fns flycheck-pos-tip flycheck-elm flycheck evil-magit magit magit-popup git-commit with-editor elm-mode cython-mode company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-anaconda company color-identifiers-mode autofit-frame fit-frame auto-yasnippet yasnippet auto-complete anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore))
  '(solarized-high-contrast-mode-line t))
@@ -400,4 +414,5 @@ you should place your code here."
  '(evil-goggles-undo-redo-add-face ((t (:inherit diff-added))))
  '(evil-goggles-undo-redo-change-face ((t (:inherit diff-changed))))
  '(evil-goggles-undo-redo-remove-face ((t (:inherit diff-removed))))
- '(evil-goggles-yank-face ((t (:inherit diff-changed)))))
+ '(evil-goggles-yank-face ((t (:inherit diff-changed))))
+ '(markdown-code-face ((t (:family "Menlo")))))

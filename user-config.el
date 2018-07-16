@@ -2,15 +2,15 @@
   (set-face-attribute 'default nil
                       :font "Iosevka"
                       :weight 'light
-                      :height 120)
+                      :height 100)
   (set-face-attribute 'font-lock-comment-face nil
                       :font "Iosevka"
                       :weight 'ultra-light
-                      :height 120)
+                      :height 100)
   (set-face-attribute 'variable-pitch nil
-                      :font "Inconsolata"
+                      :font "Inconsolata Nerd Font"
                       :weight 'light
-                      :height 140))
+                      :height 100))
 
 (my-default-fonts)
 

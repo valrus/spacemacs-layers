@@ -2,7 +2,10 @@
 ; which require an initialization must be listed explicitly in the list.
 (setq valrus-packages
   '(
+    company
+    ;; deadgrep
     elm-mode
+    enh-ruby-mode
     evil-escape
     fill-column-indicator
     flycheck
@@ -12,6 +15,7 @@
     ;; neotree
     org-mode
     persp-mode
+    spaceline
     ;; rainbow-delimiters
     theming
     yaml-mode
@@ -39,14 +43,23 @@
     (zenburn-theme :excluded t)
     ))
 
-(defun valrus/post-init-auctex ()
-  (cond
-   ((string-equal system-type "darwin")
-    (progn (setq TeX-view-program-selection '((output-pdf "Preview")))))
-   ((string-equal system-type "gnu/linux")
+(defun valrus/post-init-company ()
+  (define-key evil-insert-state-map (kbd "<S-tab>") 'company-complete)
+  (setq company-idle-delay nil))
+
+;; Deadgrep doesn't play nice with... something
+;; (defun valrus/init-deadgrep ()
+;;   (use-package deadgrep
+;;     :config
+;;     (progn
+;;       (spacemacs/set-leader-keys "/" #'deadgrep))))
+
+(defun valrus/pre-init-enh-ruby-mode ()
+  (spacemacs|use-package-add-hook enh-ruby-mode
+    :post-config
     (progn
-      (add-to-list 'TeX-view-program-list '("mupdf" "/usr/bin/mupdf %o"))
-      (setq TeX-view-program-selection '((output-pdf "mupdf")))))))
+      (modify-syntax-entry ?_ "w" enh-ruby-mode-syntax-table)
+      (modify-syntax-entry ?: "_" enh-ruby-mode-syntax-table))))
 
 (defun valrus/post-init-fill-column-indicator ()
   (turn-on-fci-mode))
@@ -66,6 +79,7 @@
 (defun valrus/post-init-persp-mode ()
   ;; Don't kill foreign buffers to avoid a bunch of warnings on clean-buffer-list
   (setq persp-kill-foreign-buffer-behaviour nil)
+  (setq clean-buffer-list-delay-general 1)
   (spacemacs|define-custom-layout "@conf"
     :binding "c"
     :body
@@ -85,44 +99,46 @@
 (defun valrus/org-settings ()
   (visual-line-mode t))
 
+(defun valrus/post-init-spaceline ()
+  (setq powerline-default-separator nil)
+  (spaceline-compile))
+
 (defun valrus/post-init-org-mode ()
   (add-hook 'org-mode-hook 'valrus/org-settings))
 
 (defun valrus/post-init-flycheck ()
   (setq-default flycheck-display-errors-function 'flycheck-display-error-messages-unless-error-list))
 
-(defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
+(defun valrus/disable-rainbow-delimiter-overline ()
   ;; Turn off overlines; they mess up line spacing
   (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                       :overline nil)
   (set-face-attribute 'rainbow-delimiters-mismatched-face nil
-                      :overline nil)
+                      :overline nil))
+
+(defun valrus/rainbow-delimiters-fonts (orig-fun &rest args)
+  (valrus/disable-rainbow-delimiter-overline)
   (apply orig-fun args))
 
-(defun valrus/post-init-theming ()
-  (when (configuration-layer/package-usedp 'rainbow-delimiters)
+(defun valrus/post-init-rainbow-delimiters ()
+  (when (configuration-layer/layer-usedp 'theming)
     (advice-add 'load-theme :after #'valrus/rainbow-delimiters-fonts))
-  (mapc
-   (lambda (face)
-     (set-face-attribute face nil :overline nil)
-     (valrus/fix-face-box face))
-   (face-list)))
-
-(defun valrus/fix-face-box (face)
-  "Make sure all faces with a box have negative :line-width so they don't shift text around"
-  (let ((box-attr (face-attribute face :box nil 'default)))
-    (cond
-     ((consp box-attr)
-      (let ((result (copy-sequence box-attr)))
-        (plist-put result :line-width (- (abs (or (plist-get box-attr :line-width) 1))))
-        (set-face-attribute face nil :box result)))
-     ((stringp box-attr)
-      (set-face-attribute face nil :box '(:color box-attr :line-width -1)))
-     (box-attr
-      (set-face-attribute face nil :box '(:line-width -1))))))
+  (valrus/disable-rainbow-delimiter-overline))
 
 (defun valrus/post-init-markdown-mode ()
+  ;; why the fuck aren't these face names defined here??
+  ;; (set-face-attribute 'markdown-inline-code-face nil
+  ;;                     :font "Iosevka"
+  ;;                     :weight 'regular
+  ;;                     :height 100)
+  ;; (set-face-attribute 'markdown-pre-face nil
+  ;;                     :font "Iosevka"
+  ;;                     :weight 'regular
+  ;;                     :height 100)
   (add-hook 'markdown-mode-hook 'spacemacs/toggle-auto-completion-off))
+
+(defun valrus/post-init-spaceline ()
+  (setq spaceline-window-numbers-unicode nil))
 
 ;; (defun valrus/post-init-neotree ()
 ;;   (setq neo-theme 'nerd))
