@@ -164,6 +164,8 @@ values."
    dotspacemacs-themes '(
                          spacemacs-light
                          spacemacs-dark
+                         doom-one-light
+                         doom-one
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -379,7 +381,7 @@ you should place your code here."
   ;; (add-to-list 'default-frame-alist '(ns-appearance . light))
 
   ;; kill ugly line wrap things
-  (spacemacs/toggle-visual-line-navigation-off)
+  (spacemacs/toggle-visual-line-navigation-on)
   (spacemacs/toggle-mode-line-minor-modes-off))
 
 (custom-set-variables
@@ -388,13 +390,12 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ac-ispell-requires 4)
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
+ '(ahs-case-fold-search nil t)
+ '(ahs-default-range (quote ahs-range-whole-buffer) t)
+ '(ahs-idle-interval 0.25 t)
  '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
+ '(ahs-inhibit-face-list nil t)
  '(flycheck-display-errors-function (quote flycheck-display-error-messages))
- '(flycheck-python-pylint-executable "/Users/valrus/.pyenv/versions/kivy/bin/pylint")
  '(flycheck-standard-error-navigation nil)
  '(package-selected-packages
    (quote
