@@ -338,31 +338,11 @@ It is called immediately after `dotspacemacs/init', before layer configuration
 executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first.")
-
-(defun my-default-fonts ()
-  (set-face-attribute 'default nil
-                      :font "Iosevka"
-                      :weight 'light
-                      :height 100)
-  (set-face-attribute 'font-lock-comment-face nil
-                      :font "Iosevka"
-                      :weight 'ultra-light
-                      :height 100)
-  (set-face-attribute 'variable-pitch nil
-                      :font "Rosario"
-                      :weight 'regular
-                      :height 110)
-  (set-face-attribute 'line-number nil
-                      :font "Iosevka"
-                      :weight 'light
-                      :height 90)
-  (set-face-attribute 'line-number-current-line nil
-                      :font "Iosevka"
-                      :weight 'bold
-                      :height 90)
-  ;; Add a little extra line spacing so over/underlines don't mess things up
-  (setq-default line-spacing 0))
+`dotspacemacs/user-config' first."
+  (when (file-exists-p "~/.emacs.d/private/user-init.el")
+    (load-file "~/.emacs.d/private/user-init.el"))
+  (when (file-exists-p "~/.emacs.d/private/local/user-init.el")
+    (load-file "~/.emacs.d/private/local/user-init.el")))
 
 (defun my-include-underscores-in-words ()
   (modify-syntax-entry ?_ "w"))
@@ -374,15 +354,10 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (my-default-fonts)
-
-  ;; fancy frames
-  ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  ;; (add-to-list 'default-frame-alist '(ns-appearance . light))
-
-  ;; kill ugly line wrap things
-  (spacemacs/toggle-visual-line-navigation-on)
-  (spacemacs/toggle-mode-line-minor-modes-off))
+  (when (file-exists-p "~/.emacs.d/private/user-config.el")
+    (load-file "~/.emacs.d/private/user-config.el"))
+  (when (file-exists-p "~/.emacs.d/private/local/user-config.el")
+    (load-file "~/.emacs.d/private/local/user-config.el")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
