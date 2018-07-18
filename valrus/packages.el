@@ -16,7 +16,6 @@
     ;; neotree
     org-mode
     persp-mode
-    spaceline
     ;; rainbow-delimiters
     spaceline
     theming
